@@ -18,15 +18,22 @@ export interface FruitData {
   storageTime: number;
 }
 
-export interface ShelfLifePrediction {
-  optimum: number;
-  current: number;
-  factors: Array<{
-    factor: string;
-    impact: number;
-  }>;
+export interface NutritionalData {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+  }[];
 }
 
+export interface ShelfLifePredictionData {
+  optimum: number;
+  current: number;
+  factors: {
+    factor: string;
+    impact: number;
+  }[];
+}
 export interface BatchData {
   id: string;
   receivedDate: string;
@@ -37,14 +44,6 @@ export interface BatchData {
     bestBefore: string;
     expectedQuality: number;
   };
-}
-
-export interface NutritionalData {
-  labels: string[];
-  datasets: Array<{
-    data: number[];
-    backgroundColor: string[];
-  }>;
 }
 
 export interface ChartConfig {

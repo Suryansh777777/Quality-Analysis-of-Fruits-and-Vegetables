@@ -1,7 +1,6 @@
-// app/dashboard/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Apple, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,16 +25,16 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { NutritionalChart } from "@/components/dashboard/NutritionalChart";
 import { PhysicalProperties } from "@/components/dashboard/PhysicalProperties";
 import { BatchTable } from "@/components/dashboard/BatchTable";
+import { ShelfLifePrediction } from "@/components/dashboard/ShelfLifePrediction";
 
 import {
   FruitData,
-  ShelfLifePrediction,
   BatchData,
   NutritionalData,
+  ShelfLifePredictionData,
 } from "@/types/dashboard";
 
-// Mock data
-
+// Mock data (TypeScript interfaces should be defined in @/types/dashboard.ts)
 const mockData: Record<string, FruitData> = {
   Apple: {
     qualityScore: 85,
@@ -53,15 +52,47 @@ const mockData: Record<string, FruitData> = {
     origin: "Local Farm A",
     storageTime: 48,
   },
+  Banana: {
+    qualityScore: 78,
+    pHLevel: 4.8,
+    ripeness: 65,
+    defects: 8,
+    temperature: 23,
+    humidity: 65,
+    weight: 120,
+    size: { length: 20, width: 3.5 },
+    sugar: 12,
+    firmness: 60,
+    shelfLife: 7,
+    batchId: "BAN-2024-001",
+    origin: "Tropical Imports Inc.",
+    storageTime: 24,
+  },
+  Orange: {
+    qualityScore: 90,
+    pHLevel: 3.8,
+    ripeness: 75,
+    defects: 3,
+    temperature: 21,
+    humidity: 55,
+    weight: 140,
+    size: { length: 7, width: 7 },
+    sugar: 10,
+    firmness: 80,
+    shelfLife: 21,
+    batchId: "ORG-2024-001",
+    origin: "Citrus Groves LLC",
+    storageTime: 72,
+  },
 };
 
-const mockShelfLifePrediction: ShelfLifePrediction = {
+const mockShelfLifePrediction: ShelfLifePredictionData = {
   optimum: 14,
   current: 10,
   factors: [
     { factor: "Temperature", impact: -1 },
     { factor: "Humidity", impact: -2 },
-    { factor: "Initial Quality", impact: +1 },
+    { factor: "Initial Quality", impact: 1 },
   ],
 };
 
@@ -71,11 +102,11 @@ const mockNutritionalData: NutritionalData = {
     {
       data: [30, 20, 15, 25, 10],
       backgroundColor: [
-        "rgba(255, 99, 132, 0.6)",
-        "rgba(54, 162, 235, 0.6)",
-        "rgba(255, 206, 86, 0.6)",
-        "rgba(75, 192, 192, 0.6)",
-        "rgba(153, 102, 255, 0.6)",
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
       ],
     },
   ],
@@ -91,6 +122,28 @@ const mockBatchHistory: BatchData[] = [
     predictions: {
       bestBefore: "2024-03-29",
       expectedQuality: 75,
+    },
+  },
+  {
+    id: "BAN-2024-001",
+    receivedDate: "2024-03-18",
+    initialQuality: 85,
+    currentQuality: 78,
+    status: "In Transit",
+    predictions: {
+      bestBefore: "2024-03-25",
+      expectedQuality: 70,
+    },
+  },
+  {
+    id: "ORG-2024-001",
+    receivedDate: "2024-03-20",
+    initialQuality: 95,
+    currentQuality: 90,
+    status: "In Storage",
+    predictions: {
+      bestBefore: "2024-04-10",
+      expectedQuality: 80,
     },
   },
 ];
@@ -124,20 +177,20 @@ export default function Dashboard() {
   }, [autoUpdateEnabled]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8  mx-auto px-4">
       <motion.div
         className="flex justify-between items-center"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400">
           Fruit Quality Analysis Dashboard
         </h1>
         <Button
           onClick={handleAnalyze}
           disabled={isAnalyzing}
-          className="bg-green-500 hover:bg-green-600"
+          className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white"
         >
           {isAnalyzing ? (
             <>
@@ -153,7 +206,7 @@ export default function Dashboard() {
 
       <div className="flex flex-wrap gap-4 items-center justify-between">
         <Select value={selectedFruit} onValueChange={setSelectedFruit}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] bg-gray-800 border-gray-700 text-white">
             <SelectValue placeholder="Select produce" />
           </SelectTrigger>
           <SelectContent>
@@ -170,7 +223,7 @@ export default function Dashboard() {
             value={selectedTimeRange}
             onValueChange={setSelectedTimeRange}
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] bg-gray-800 border-gray-700 text-white">
               <SelectValue placeholder="Time range" />
             </SelectTrigger>
             <SelectContent>
@@ -194,11 +247,31 @@ export default function Dashboard() {
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analysis">Detailed Analysis</TabsTrigger>
-          <TabsTrigger value="prediction">Predictions</TabsTrigger>
-          <TabsTrigger value="batch">Batch Tracking</TabsTrigger>
+        <TabsList className="bg-gray-800 text-gray-400">
+          <TabsTrigger
+            value="overview"
+            className="data-[state=active]:bg-gray-700 data-[state=active]:text-white"
+          >
+            Overview
+          </TabsTrigger>
+          <TabsTrigger
+            value="analysis"
+            className="data-[state=active]:bg-gray-700 data-[state=active]:text-white"
+          >
+            Detailed Analysis
+          </TabsTrigger>
+          <TabsTrigger
+            value="prediction"
+            className="data-[state=active]:bg-gray-700 data-[state=active]:text-white"
+          >
+            Predictions
+          </TabsTrigger>
+          <TabsTrigger
+            value="batch"
+            className="data-[state=active]:bg-gray-700 data-[state=active]:text-white"
+          >
+            Batch Tracking
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -206,27 +279,128 @@ export default function Dashboard() {
             <MetricCard
               title="Quality Score"
               value={`${currentData.qualityScore.toFixed(1)}%`}
+              icon={<Apple className="h-4 w-4 text-blue-400" />}
+              showProgress={true}
+              progress={currentData.qualityScore}
+              trend={{
+                direction: "up",
+                value: "5%",
+                label: "from last week",
+              }}
+            />
+            <MetricCard
+              title="pH Level"
+              value={currentData.pHLevel.toFixed(2)}
+              icon={<Apple className="h-4 w-4 text-blue-400" />}
+              showProgress={true}
+              progress={(currentData.pHLevel / 14) * 100}
+              description="Optimal range: 3.0 - 4.5"
+            />
+            <MetricCard
+              title="Ripeness"
+              value={`${currentData.ripeness.toFixed(1)}%`}
               icon={<Apple className="h-4 w-4 text-green-400" />}
               showProgress={true}
+              progress={currentData.ripeness}
+              trend={{
+                direction: "up",
+                value: "2%",
+                label: "from yesterday",
+              }}
+            />
+            <MetricCard
+              title="Defects"
+              value={`${currentData.defects.toFixed(1)}%`}
+              icon={<Apple className="h-4 w-4 text-red-400" />}
+              showProgress={true}
+              progress={currentData.defects}
+              trend={{
+                direction: "down",
+                value: "1.5%",
+                label: "from last batch",
+              }}
             />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             <NutritionalChart data={mockNutritionalData} />
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">
+                  Physical Properties
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  Key measurements and characteristics
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PhysicalProperties data={currentData} />
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
         <TabsContent value="analysis">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <PhysicalProperties data={currentData} />
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">Detailed Metrics</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Comprehensive analysis of fruit quality
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {Object.entries(currentData).map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-gray-400 capitalize">
+                        {key.replace(/([A-Z])/g, " $1").trim()}
+                      </span>
+                      <span className="font-semibold text-white">
+                        {typeof value === "object"
+                          ? JSON.stringify(value)
+                          : value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">Image Analysis</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Visual inspection results
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="relative">
+                  <img
+                    src={`/placeholder.svg?height=300&width=400&text=${selectedFruit}`}
+                    alt={`${selectedFruit} image analysis`}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                  <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">
+                    {selectedFruit}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="prediction">
+          <ShelfLifePrediction data={mockShelfLifePrediction} />
         </TabsContent>
 
         <TabsContent value="batch">
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
-              <CardTitle>Batch Tracking</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-white">Batch Tracking</CardTitle>
+              <CardDescription className="text-gray-400">
                 Current batch information and history
               </CardDescription>
             </CardHeader>

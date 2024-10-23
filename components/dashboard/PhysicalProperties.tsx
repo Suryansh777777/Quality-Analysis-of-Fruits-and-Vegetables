@@ -1,45 +1,39 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import React from "react";
 import { FruitData } from "@/types/dashboard";
+import { Badge } from "@/components/ui/badge";
 
 interface PhysicalPropertiesProps {
   data: FruitData;
 }
 
-export const PhysicalProperties: React.FC<PhysicalPropertiesProps> = ({
-  data,
-}) => {
+export function PhysicalProperties({ data }: PhysicalPropertiesProps) {
+  const properties = [
+    { label: "Weight", value: `${data.weight}g` },
+    { label: "Size", value: `${data.size.length}cm x ${data.size.width}cm` },
+    { label: "Sugar Content", value: `${data.sugar}%` },
+    { label: "Firmness", value: `${data.firmness}%` },
+  ];
+
   return (
-    <Card className="bg-gray-800 border-gray-700">
-      <CardHeader>
-        <CardTitle>Physical Properties</CardTitle>
-        <CardDescription>
-          Size, weight, and firmness measurements
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span>Weight</span>
-            <span className="font-bold">{data.weight}g</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span>Size (L × W)</span>
-            <span className="font-bold">
-              {data.size.length}cm × {data.size.width}cm
-            </span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span>Firmness</span>
-            <span className="font-bold">{data.firmness}%</span>
-          </div>
+    <div className="space-y-4">
+      {properties.map((prop, index) => (
+        <div key={index} className="flex justify-between items-center">
+          <span className="text-gray-400">{prop.label}</span>
+          <Badge variant="secondary">{prop.value}</Badge>
         </div>
-      </CardContent>
-    </Card>
+      ))}
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">Origin</span>
+        <Badge variant="outline" className="text-blue-400 border-blue-400">
+          {data.origin}
+        </Badge>
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">Storage Time</span>
+        <Badge variant="outline" className="text-green-400 border-green-400">
+          {data.storageTime} hours
+        </Badge>
+      </div>
+    </div>
   );
-};
+}
