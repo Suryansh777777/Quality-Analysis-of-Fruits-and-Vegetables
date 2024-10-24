@@ -81,7 +81,7 @@ const Navbar = () => {
               <BarChart2 className="h-5 w-5" />
             </Button>
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
@@ -101,7 +101,7 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem>Weekly report ready</DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             <Button
               variant="ghost"

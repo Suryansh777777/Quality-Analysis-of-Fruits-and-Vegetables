@@ -73,13 +73,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         )}
       >
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-xl">
+          <CardTitle className="flex items-center gap-3 text-xl sm:text-lg">
             <div className="p-2 rounded-lg bg-gray-700/50">{icon}</div>
-            <span>{title}</span>
+            <span className="text-base sm:text-sm md:text-base">{title}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <CardDescription className="text-gray-300 text-base">
+          <CardDescription className="text-gray-300 text-base sm:text-sm md:text-base">
             {description}
           </CardDescription>
         </CardContent>
@@ -97,7 +97,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       <Navbar />
 
-      <header className="container mx-auto px-4 py-16 relative">
+      <header className="container mx-auto px-4 py-6 sm:py-12 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-3xl" />
         <motion.div
           className="text-center relative"
@@ -108,108 +108,115 @@ export default function Home() {
           <Badge className="mb-4 bg-gray-800 text-gray-100 hover:bg-gray-700">
             New Release v2.0
           </Badge>
-          <h1 className="text-6xl font-bold my-6  bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold my-6 bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text px-2">
             Revolutionizing Fruit & Vegetable
-            <br />
+            <br className="hidden sm:block" />
             Quality Analysis
           </h1>
-          <p className="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl mb-8 text-gray-300 max-w-2xl mx-auto px-4">
             Harness the power of IoT and Deep Learning for real-time quality
             assessment with unprecedented accuracy
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-4 justify-center flex-wrap">
             <Button
               size="lg"
-              className="bg-white text-gray-900 hover:bg-gray-100"
+              className="bg-white text-gray-900 hover:bg-gray-100 w-full sm:w-auto"
             >
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            {/* <Button
-              size="lg"
-              variant="outline"
-              className="border-gray-700 hover:bg-gray-800"
-            >
-              View Demo
-            </Button> */}
           </div>
         </motion.div>
       </header>
 
-      <main className="container mx-auto px-4 py-16 text-gray-100">
-        <section className="mb-24">
+      <main className="container mx-auto px-4 py-6 sm:py-12 text-gray-100">
+        <section className="mb-24 sm:mb-16">
           <motion.div
-            className="text-center mb-12"
+            className="text-center mb-12 sm:mb-8"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold mb-4">Key Features</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+              Key Features
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
               Our comprehensive solution combines cutting-edge technology with
               user-friendly interfaces
             </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
             <FeatureCard
-              icon={<Camera className="h-6 w-6 text-blue-400" />}
+              icon={<Camera className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />}
               title="Image Processing"
               description="Advanced computer vision for visual quality assessment"
             />
             <FeatureCard
-              icon={<Droplet className="h-6 w-6 text-green-400" />}
+              icon={
+                <Droplet className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
+              }
               title="pH Sensing"
               description="Real-time chemical analysis for internal quality checks"
             />
             <FeatureCard
-              icon={<Cloud className="h-6 w-6 text-purple-400" />}
+              icon={<Cloud className="h-5 w-5 sm:h-6 sm:w-6 text-purple-400" />}
               title="Cloud Integration"
               description="Scalable data processing and storage solutions"
             />
             <FeatureCard
-              icon={<BarChart2 className="h-6 w-6 text-yellow-400" />}
+              icon={
+                <BarChart2 className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400" />
+              }
               title="Real-time Analytics"
               description="Instant quality grading and defect detection"
             />
             <FeatureCard
-              icon={<Zap className="h-6 w-6 text-red-400" />}
+              icon={<Zap className="h-5 w-5 sm:h-6 sm:w-6 text-red-400" />}
               title="IoT Enabled"
               description="Seamless connectivity for continuous monitoring"
             />
             <FeatureCard
-              icon={<DollarSign className="h-6 w-6 text-green-400" />}
+              icon={
+                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
+              }
               title="Cost-Effective"
               description="Affordable solution for businesses of all sizes"
             />
           </motion.div>
         </section>
 
-        <section className="mb-24">
+        <section className="mb-24 sm:mb-16">
           <motion.div
-            className="text-center mb-12"
+            className="text-center mb-12 sm:mb-8"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+              How It Works
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
               A streamlined process for quality assessment
             </p>
           </motion.div>
 
           <Tabs defaultValue="process" className="w-full">
             <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-2 mb-8">
-              <TabsTrigger value="process">Process Flow</TabsTrigger>
-              <TabsTrigger value="technical">Technical Details</TabsTrigger>
+              <TabsTrigger value="process" className="text-sm sm:text-base">
+                Process Flow
+              </TabsTrigger>
+              <TabsTrigger value="technical" className="text-sm sm:text-base">
+                Technical Details
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="process" className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -219,7 +226,7 @@ export default function Home() {
                   transition={{ duration: 0.5 }}
                   viewport={{ once: true }}
                 >
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {[
                       "Capture high-quality images of fruits and vegetables",
                       "Collect pH sensor data for internal quality assessment",
@@ -228,18 +235,20 @@ export default function Home() {
                       "Generate real-time quality reports and alerts",
                     ].map((step, index) => (
                       <div key={index} className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <span className="text-green-400 text-sm font-medium">
+                        <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                          <span className="text-green-400 text-xs sm:text-sm font-medium">
                             {index + 1}
                           </span>
                         </div>
-                        <p className="text-gray-300 mt-1">{step}</p>
+                        <p className="text-gray-300 mt-1 text-sm sm:text-base">
+                          {step}
+                        </p>
                       </div>
                     ))}
                   </div>
                 </motion.div>
                 <motion.div
-                  className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700"
+                  className="bg-gray-800/50 p-4 sm:p-6 rounded-2xl border border-gray-700"
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5 }}
@@ -255,43 +264,55 @@ export default function Home() {
             </TabsContent>
             <TabsContent value="technical">
               <Card className="bg-gray-800/50 border-gray-700 text-gray-100">
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <div>
-                      <h4 className="text-lg font-semibold mb-4">
+                      <h4 className="text-base sm:text-lg font-semibold mb-4">
                         Technologies Used
                       </h4>
-                      <ul className="space-y-3">
+                      <ul className="space-y-2 sm:space-y-3">
                         <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <span>Deep Learning Models (TensorFlow/PyTorch)</span>
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                          <span className="text-sm sm:text-base">
+                            Deep Learning Models (TensorFlow/PyTorch)
+                          </span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <span>IoT Sensors & Controllers</span>
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                          <span className="text-sm sm:text-base">
+                            IoT Sensors & Controllers
+                          </span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <span>Cloud Computing Infrastructure</span>
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                          <span className="text-sm sm:text-base">
+                            Cloud Computing Infrastructure
+                          </span>
                         </li>
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-lg font-semibold mb-4">
+                      <h4 className="text-base sm:text-lg font-semibold mb-4">
                         Performance Metrics
                       </h4>
-                      <ul className="space-y-3">
+                      <ul className="space-y-2 sm:space-y-3">
                         <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <span>99.9% Uptime Guarantee</span>
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                          <span className="text-sm sm:text-base">
+                            99.9% Uptime Guarantee
+                          </span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <span>Real-time Processing (100ms)</span>
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                          <span className="text-sm sm:text-base">
+                            Real-time Processing (100ms)
+                          </span>
                         </li>
                         <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <span>95% Accuracy in Quality Assessment</span>
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
+                          <span className="text-sm sm:text-base">
+                            95% Accuracy in Quality Assessment
+                          </span>
                         </li>
                       </ul>
                     </div>
