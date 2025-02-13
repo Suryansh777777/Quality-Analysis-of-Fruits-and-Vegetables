@@ -1,22 +1,39 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Apple, Camera } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Apple, Camera } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
-import { MetricCard } from "@/components/dashboard/MetricCard"
-import { NutritionalChart } from "@/components/dashboard/NutritionalChart"
-import { PhysicalProperties } from "@/components/dashboard/PhysicalProperties"
-import { BatchTable } from "@/components/dashboard/BatchTable"
-import { ShelfLifePrediction } from "@/components/dashboard/ShelfLifePrediction"
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { NutritionalChart } from "@/components/dashboard/NutritionalChart";
+import { PhysicalProperties } from "@/components/dashboard/PhysicalProperties";
+import { BatchTable } from "@/components/dashboard/BatchTable";
+import { ShelfLifePrediction } from "@/components/dashboard/ShelfLifePrediction";
 
-import type { FruitData, BatchData, NutritionalData, ShelfLifePredictionData } from "@/types/dashboard"
-import Navbar from "@/components/Navbar"
+import type {
+  FruitData,
+  BatchData,
+  NutritionalData,
+  ShelfLifePredictionData,
+} from "@/types/dashboard";
+import Navbar from "@/components/Navbar";
 
 // Mock data (TypeScript interfaces should be defined in @/types/dashboard.ts)
 const mockData: Record<string, FruitData> = {
@@ -68,7 +85,7 @@ const mockData: Record<string, FruitData> = {
     origin: "Citrus Groves LLC",
     storageTime: 72,
   },
-}
+};
 
 const mockShelfLifePrediction: ShelfLifePredictionData = {
   optimum: 14,
@@ -78,7 +95,7 @@ const mockShelfLifePrediction: ShelfLifePredictionData = {
     { factor: "Humidity", impact: -2 },
     { factor: "Initial Quality", impact: 1 },
   ],
-}
+};
 
 const mockNutritionalData: NutritionalData = {
   labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
@@ -94,7 +111,7 @@ const mockNutritionalData: NutritionalData = {
       ],
     },
   ],
-}
+};
 
 const mockBatchHistory: BatchData[] = [
   {
@@ -130,35 +147,35 @@ const mockBatchHistory: BatchData[] = [
       expectedQuality: 80,
     },
   },
-]
+];
 
 export default function Dashboard() {
-  const [selectedFruit, setSelectedFruit] = useState<string>("Apple")
-  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(true)
-  const [selectedTimeRange, setSelectedTimeRange] = useState<string>("week")
-  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false)
+  const [selectedFruit, setSelectedFruit] = useState<string>("Apple");
+  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(true);
+  const [selectedTimeRange, setSelectedTimeRange] = useState<string>("week");
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
 
-  const currentData = mockData[selectedFruit]
+  const currentData = mockData[selectedFruit];
 
   const handleAnalyze = () => {
-    setIsAnalyzing(true)
+    setIsAnalyzing(true);
     setTimeout(() => {
-      setIsAnalyzing(false)
-    }, 2000)
-  }
+      setIsAnalyzing(false);
+    }, 2000);
+  };
 
   useEffect(() => {
     if (autoUpdateEnabled) {
       const interval = setInterval(() => {
         setSelectedFruit((prev) => {
-          const fruits = Object.keys(mockData)
-          const currentIndex = fruits.indexOf(prev)
-          return fruits[(currentIndex + 1) % fruits.length]
-        })
-      }, 5000)
-      return () => clearInterval(interval)
+          const fruits = Object.keys(mockData);
+          const currentIndex = fruits.indexOf(prev);
+          return fruits[(currentIndex + 1) % fruits.length];
+        });
+      }, 5000);
+      return () => clearInterval(interval);
     }
-  }, [autoUpdateEnabled])
+  }, [autoUpdateEnabled]);
 
   return (
     <>
@@ -171,13 +188,13 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 mb-4 sm:mb-0">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-green-200 mb-4 sm:mb-0">
               Fruit Quality Analysis Dashboard
             </h1>
             <Button
               onClick={handleAnalyze}
               disabled={isAnalyzing}
-              className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white w-full sm:w-auto"
+              className="bg-black text-white w-full sm:w-auto"
             >
               {isAnalyzing ? (
                 <>
@@ -206,7 +223,10 @@ export default function Dashboard() {
             </Select>
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
-              <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+              <Select
+                value={selectedTimeRange}
+                onValueChange={setSelectedTimeRange}
+              >
                 <SelectTrigger className="w-full sm:w-[140px] bg-gray-800 border-gray-700 text-white">
                   <SelectValue placeholder="Time range" />
                 </SelectTrigger>
@@ -218,7 +238,11 @@ export default function Dashboard() {
               </Select>
 
               <div className="flex items-center space-x-2">
-                <Switch checked={autoUpdateEnabled} onCheckedChange={setAutoUpdateEnabled} id="auto-update" />
+                <Switch
+                  checked={autoUpdateEnabled}
+                  onCheckedChange={setAutoUpdateEnabled}
+                  id="auto-update"
+                />
                 <label htmlFor="auto-update" className="text-sm text-gray-400">
                   Auto Cycle
                 </label>
@@ -305,8 +329,12 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="bg-gray-800 border-gray-700">
                   <CardHeader>
-                    <CardTitle className="text-white">Nutritional Data</CardTitle>
-                    <CardDescription className="text-gray-400">Breakdown of nutritional components</CardDescription>
+                    <CardTitle className="text-white">
+                      Nutritional Data
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Breakdown of nutritional components
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <NutritionalChart data={mockNutritionalData} />
@@ -314,8 +342,12 @@ export default function Dashboard() {
                 </Card>
                 <Card className="bg-gray-800 border-gray-700">
                   <CardHeader>
-                    <CardTitle className="text-white">Physical Properties</CardTitle>
-                    <CardDescription className="text-gray-400">Key measurements and characteristics</CardDescription>
+                    <CardTitle className="text-white">
+                      Physical Properties
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Key measurements and characteristics
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <PhysicalProperties data={currentData} />
@@ -328,16 +360,27 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="bg-gray-800 border-gray-700">
                   <CardHeader>
-                    <CardTitle className="text-white">Detailed Metrics</CardTitle>
-                    <CardDescription className="text-gray-400">Comprehensive analysis of fruit quality</CardDescription>
+                    <CardTitle className="text-white">
+                      Detailed Metrics
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Comprehensive analysis of fruit quality
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {Object.entries(currentData).map(([key, value]) => (
-                        <div key={key} className="flex justify-between items-center">
-                          <span className="text-gray-400 capitalize">{key.replace(/([A-Z])/g, " $1").trim()}</span>
+                        <div
+                          key={key}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-gray-400 capitalize">
+                            {key.replace(/([A-Z])/g, " $1").trim()}
+                          </span>
                           <span className="font-semibold text-white">
-                            {typeof value === "object" ? JSON.stringify(value) : value}
+                            {typeof value === "object"
+                              ? JSON.stringify(value)
+                              : value}
                           </span>
                         </div>
                       ))}
@@ -347,7 +390,9 @@ export default function Dashboard() {
                 <Card className="bg-gray-800 border-gray-700">
                   <CardHeader>
                     <CardTitle className="text-white">Image Analysis</CardTitle>
-                    <CardDescription className="text-gray-400">Visual inspection results</CardDescription>
+                    <CardDescription className="text-gray-400">
+                      Visual inspection results
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="flex items-center justify-center">
                     <div className="relative w-full h-64 sm:h-80 md:h-96">
@@ -373,7 +418,9 @@ export default function Dashboard() {
               <Card className="bg-gray-800 border-gray-700">
                 <CardHeader>
                   <CardTitle className="text-white">Batch Tracking</CardTitle>
-                  <CardDescription className="text-gray-400">Current batch information and history</CardDescription>
+                  <CardDescription className="text-gray-400">
+                    Current batch information and history
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <BatchTable data={mockBatchHistory} />
@@ -384,6 +431,5 @@ export default function Dashboard() {
         </div>
       </div>
     </>
-  )
+  );
 }
-
