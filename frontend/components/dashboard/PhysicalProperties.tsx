@@ -1,5 +1,5 @@
 import React from "react";
-import { FruitData } from "@/frontend/types/dashboard";
+import { FruitData } from "@/types/dashboard";
 import { Badge } from "@/components/ui/badge";
 
 interface PhysicalPropertiesProps {

@@ -34,7 +34,7 @@ const Navbar = () => {
             </div>
             <div className="hidden md:block ml-4">
               <div className="flex items-baseline space-x-4">
-                <span className="text-white font-bold">Fruit Quality </span>
+                <span className="text-white font-bold">Quality Analysis</span>
                 <a
                   href="/dashboard"
                   className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -58,7 +58,7 @@ const Navbar = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="hidden md:flex items-center flex-1 max-w-xs ml-6">
+          {/* <div className="hidden md:flex items-center flex-1 max-w-xs ml-6">
             <div className="relative w-full">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />
@@ -69,7 +69,7 @@ const Navbar = () => {
                 placeholder="Search batches..."
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Right side icons */}
           <div className="hidden md:flex items-center space-x-4">

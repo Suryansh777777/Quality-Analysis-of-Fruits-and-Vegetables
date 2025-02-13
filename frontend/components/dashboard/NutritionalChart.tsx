@@ -4,7 +4,7 @@ import { ChartContainer } from "@/components/ui/chart";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { NutritionalData } from "@/frontend/types/dashboard";
+import { NutritionalData } from "@/types/dashboard";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 

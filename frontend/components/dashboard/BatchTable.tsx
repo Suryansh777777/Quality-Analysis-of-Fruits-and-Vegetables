@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { BatchData } from "@/frontend/types/dashboard";
+import { BatchData } from "@/types/dashboard";
 
 interface BatchTableProps {
   data: BatchData[];

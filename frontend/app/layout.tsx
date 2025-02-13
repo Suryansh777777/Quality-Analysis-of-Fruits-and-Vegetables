@@ -14,8 +14,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Fruit Quality",
-  description: "Advanced fruit quality analysis using CNN and deep learning",
+  title: "Quality analysis of fruits and vegetables",
+  description:
+    "Advanced fruits and vegetables quality analysis using CNN and deep learning",
 };
 
 export default function RootLayout({

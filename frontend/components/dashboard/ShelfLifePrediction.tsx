@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ShelfLifePredictionData } from "@/frontend/types/dashboard";
+import { ShelfLifePredictionData } from "@/types/dashboard";
 
 interface ShelfLifePredictionProps {
   data: ShelfLifePredictionData;

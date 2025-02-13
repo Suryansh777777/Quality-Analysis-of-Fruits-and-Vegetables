@@ -1,8 +1,7 @@
 "use client";
-import React from "react";
+import type React from "react";
 import { motion } from "framer-motion";
 import {
-  Apple,
   Camera,
   Droplet,
   Leaf,
@@ -14,8 +13,11 @@ import {
   DollarSign,
   ArrowRight,
   CheckCircle2,
+  ChevronRight,
+  FileText,
+  Github,
 } from "lucide-react";
-import { cn } from "@/frontend/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -97,7 +99,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       <Navbar />
 
-      <header className="container mx-auto px-4 py-6 sm:py-12 relative">
+      <header className="container mx-auto px-4 py-12 sm:py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-3xl" />
         <motion.div
           className="text-center relative"
@@ -106,7 +108,7 @@ export default function Home() {
           transition={{ duration: 0.5 }}
         >
           <Badge className="mb-4 bg-gray-800 text-gray-100 hover:bg-gray-700">
-            New Release v2.0
+            Final Year Major Project
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold my-6 bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text px-2">
             Revolutionizing Fruit & Vegetable
@@ -125,20 +127,27 @@ export default function Home() {
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-gray-700 hover:bg-gray-800 w-full sm:w-auto"
+            >
+              View Demo
+            </Button>
           </div>
         </motion.div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 sm:py-12 text-gray-100">
-        <section className="mb-24 sm:mb-16">
+      <main className="container mx-auto px-4 py-12 sm:py-20 text-gray-100">
+        <section className="mb-24 sm:mb-32">
           <motion.div
-            className="text-center mb-12 sm:mb-8"
+            className="text-center mb-12 sm:mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Key Features
             </h2>
             <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
@@ -148,7 +157,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -193,15 +202,15 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <section className="mb-24 sm:mb-16">
+        <section className="mb-24 sm:mb-32">
           <motion.div
-            className="text-center mb-12 sm:mb-8"
+            className="text-center mb-12 sm:mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               How It Works
             </h2>
             <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
@@ -323,16 +332,16 @@ export default function Home() {
           </Tabs>
         </section>
 
-        <section className="mb-24">
+        <section className="mb-24 sm:mb-32">
           <motion.div
-            className="text-center mb-12"
+            className="text-center mb-12 sm:mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold mb-4">Benefits</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Benefits</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
               Transform your quality control process with our innovative
               solution
             </p>
@@ -363,43 +372,128 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* <section className="text-center mb-24">
+        {/* <section className="mb-24 sm:mb-32">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            className="text-center mb-12 sm:mb-16"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold mb-4">
-              Ready to Revolutionize Your Quality Control?
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Project Gallery
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join the future of agriculture and food technology today
+            <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
+              Explore our project through visual demonstrations
             </p>
-            <div className="flex gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-              >
-                Get Started Today
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-gray-700 hover:bg-gray-800"
-              >
-                Schedule Demo
-              </Button>
-            </div>
           </motion.div>
+
+          <Carousel className="w-full max-w-4xl mx-auto">
+            <CarouselContent>
+              {[1, 2, 3, 4, 5].map((_, index) => (
+                <CarouselItem key={index}>
+                  <div className="p-1">
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardContent className="flex aspect-video items-center justify-center p-6">
+                        <img
+                          src={`/placeholder.svg?height=400&width=600&text=Project+Image+${
+                            index + 1
+                          }`}
+                          alt={`Project Image ${index + 1}`}
+                          className="w-full h-auto rounded-lg"
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </section> */}
+
+        <section className="mb-24 sm:mb-32">
+          <motion.div
+            className="text-center mb-12 sm:mb-16"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Project Resources
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto px-4 text-sm sm:text-base">
+              Access additional information and documentation
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="bg-gray-800/50 border-gray-700 text-gray-100">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Documentation
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  <li>
+                    <a
+                      href="#"
+                      className="text-blue-400 hover:underline flex items-center gap-2"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                      Project Report (PDF)
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-blue-400 hover:underline flex items-center gap-2"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                      User Manual
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="text-blue-400 hover:underline flex items-center gap-2"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                      API Documentation
+                    </a>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            <Card className="bg-gray-800/50 border-gray-700 text-gray-100">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Github className="h-5 w-5" />
+                  Source Code
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="mb-4">
+                  Explore our project's source code on GitHub:
+                </p>
+                <Button className="w-full text-black" variant="outline">
+                  View on GitHub
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
       </main>
 
       <footer className="bg-gray-900/50 backdrop-blur-sm border-t border-gray-800 py-12">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-400">
-            2024 FruitQuality. All rights reserved.
+            © 2024 FruitQuality. All rights reserved.
           </p>
         </div>
       </footer>
