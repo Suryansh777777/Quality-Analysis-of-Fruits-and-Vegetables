@@ -48,10 +48,10 @@ const Navbar = () => {
                   Analytics
                 </a>
                 <a
-                  href="#"
+                  href="/predict"
                   className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  Reports
+                  Predict
                 </a>
               </div>
             </div>
@@ -156,7 +156,7 @@ const Navbar = () => {
         <div className="md:hidden bg-gray-800">
           <div className="px-2 pt-2 pb-3 space-y-1">
             <a
-              href="#"
+              href="/dashboard"
               className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-700"
             >
               Dashboard
@@ -168,10 +168,10 @@ const Navbar = () => {
               Analytics
             </a>
             <a
-              href="#"
+              href="/predict"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
             >
-              Reports
+              Predict
             </a>
             <div className="relative mt-3 px-3">
               <div className="absolute inset-y-0 left-3 pl-3 flex items-center pointer-events-none">
