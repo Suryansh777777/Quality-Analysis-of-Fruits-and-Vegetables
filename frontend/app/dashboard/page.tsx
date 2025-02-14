@@ -101,11 +101,11 @@ const mockShelfLifePrediction: ShelfLifePredictionData = {
   ],
 };
 
-const mockNutritionalData: NutritionalData = {
-  labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
-  datasets: [
-    {
-      data: [30, 20, 15, 25, 10],
+const mockNutritionalData: Record<string, NutritionalData> = {
+  Apple: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [10.4, 2.4, 4.6, 1.6, 0.3],
       backgroundColor: [
         "rgba(59, 130, 246, 0.6)",
         "rgba(16, 185, 129, 0.6)",
@@ -113,8 +113,34 @@ const mockNutritionalData: NutritionalData = {
         "rgba(239, 68, 68, 0.6)",
         "rgba(139, 92, 246, 0.6)",
       ],
-    },
-  ],
+    }],
+  },
+  Banana: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [12.2, 2.6, 8.7, 3.2, 1.1],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  },
+  Orange: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [9.3, 2.4, 12.1, 2.8, 0.9],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  },
 };
 
 const mockBatchHistory: BatchData[] = [
@@ -196,27 +222,42 @@ export default function Dashboard() {
       console.log(result);
 
       if (result.success) {
-        // Transform API response to match FruitData structure
-        const newFruitData: FruitData = {
-          prediction: result.data.prediction,
-          qualityScore: result.data.quality_score,
-          pHLevel: 3.5,
-          ripeness: result.data.quality_score,
-          defects: 100 - result.data.quality_score,
-          temperature: 22,
-          humidity: 60,
-          weight: result.data.physical_properties.weight,
-          size: result.data.physical_properties.size,
-          sugar: result.data.nutritional_data.sugars,
-          firmness: result.data.physical_properties.firmness,
-          shelfLife: 14,
-          batchId: `${result.data.prediction.toUpperCase()}-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`,
-          origin: "Analysis Result",
-          storageTime: 0
-        };
+        // Extract the fruit name from predictions like "rotten_apple" or "fresh_apple"
+        const fruitName = result.data.prediction
+          .split('_')                    // Split by underscore
+          .pop()                         // Take the last part (apple, banana, etc.)
+          .charAt(0).toUpperCase() +     // Capitalize first letter
+          result.data.prediction
+            .split('_')
+            .pop()
+            .slice(1).toLowerCase();     // Rest in lowercase
 
-        setCurrentFruitData(newFruitData);
-        setSelectedFruit(result.data.prediction);
+        // Verify if the detected fruit exists in our mockData
+        if (mockData[fruitName]) {
+          setSelectedFruit(fruitName);
+
+          const newFruitData: FruitData = {
+            prediction: result.data.prediction, // Keep the full prediction (e.g., "rotten_apple")
+            qualityScore: result.data.quality_score,
+            pHLevel: 3.5,
+            ripeness: result.data.quality_score,
+            defects: 100 - result.data.quality_score,
+            temperature: 22,
+            humidity: 60,
+            weight: result.data.physical_properties.weight,
+            size: result.data.physical_properties.size,
+            sugar: result.data.nutritional_data.sugars,
+            firmness: result.data.physical_properties.firmness,
+            shelfLife: 14,
+            batchId: `${result.data.prediction.toUpperCase()}-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`,
+            origin: "Analysis Result",
+            storageTime: 0
+          };
+
+          setCurrentFruitData(newFruitData);
+        } else {
+          console.error('Detected fruit not in database:', fruitName);
+        }
       }
     } catch (error) {
       console.error('Analysis failed:', error);
@@ -410,7 +451,7 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <NutritionalChart data={mockNutritionalData} />
+                    <NutritionalChart data={mockNutritionalData[selectedFruit]} />
                   </CardContent>
                 </Card>
                 <Card className="bg-gray-800 border-gray-700">
