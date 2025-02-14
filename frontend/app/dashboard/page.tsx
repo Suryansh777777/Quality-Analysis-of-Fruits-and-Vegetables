@@ -155,7 +155,7 @@ const mockBatchHistory: BatchData[] = [
 
 export default function Dashboard() {
   const [selectedFruit, setSelectedFruit] = useState<string>("Apple");
-  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(true);
+  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(false);
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("week");
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
