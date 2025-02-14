@@ -103,7 +103,7 @@ export default function PredictPage() {
                         <div>
                             <h3 className="text-xl font-semibold mb-2">Nutritional Data</h3>
                             {Object.entries(prediction.nutritional_data).map(([key, value]) => (
-                                <p key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}: {value}</p>
+                                <p key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}: {String(value)}</p>
                             ))}
                         </div>
 

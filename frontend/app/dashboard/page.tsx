@@ -39,6 +39,7 @@ import Navbar from "@/components/Navbar";
 // Mock data (TypeScript interfaces should be defined in @/types/dashboard.ts)
 const mockData: Record<string, FruitData> = {
   Apple: {
+    prediction: "Grade A",
     qualityScore: 85,
     pHLevel: 3.5,
     ripeness: 70,
@@ -55,6 +56,7 @@ const mockData: Record<string, FruitData> = {
     storageTime: 48,
   },
   Banana: {
+    prediction: "Grade A",
     qualityScore: 78,
     pHLevel: 4.8,
     ripeness: 65,
@@ -71,6 +73,7 @@ const mockData: Record<string, FruitData> = {
     storageTime: 24,
   },
   Orange: {
+    prediction: "Grade A",
     qualityScore: 90,
     pHLevel: 3.8,
     ripeness: 75,
