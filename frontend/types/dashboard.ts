@@ -1,4 +1,5 @@
 export interface FruitData {
+  prediction: string;
   qualityScore: number;
   pHLevel: number;
   ripeness: number;

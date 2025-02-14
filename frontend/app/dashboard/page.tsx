@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Apple, Camera } from "lucide-react";
+import { Apple, Camera, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -20,6 +20,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { NutritionalChart } from "@/components/dashboard/NutritionalChart";
@@ -154,14 +155,72 @@ export default function Dashboard() {
   const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(true);
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("week");
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [currentFruitData, setCurrentFruitData] = useState<FruitData>(mockData.Apple);
 
-  const currentData = mockData[selectedFruit];
+  const currentData = currentFruitData;
 
-  const handleAnalyze = () => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      setImageUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAnalyze = async () => {
+    setIsUploadDialogOpen(true);
+  };
+
+  const processAnalysis = async () => {
+    if (!selectedImage) return;
+
     setIsAnalyzing(true);
-    setTimeout(() => {
+    setIsUploadDialogOpen(false);
+
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+
+    try {
+      const response = await fetch('http://localhost:8000/api/analyze-fruit', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (result.success) {
+        // Transform API response to match FruitData structure
+        const newFruitData: FruitData = {
+          prediction: result.data.prediction,
+          qualityScore: result.data.quality_score,
+          pHLevel: 3.5,
+          ripeness: result.data.quality_score,
+          defects: 100 - result.data.quality_score,
+          temperature: 22,
+          humidity: 60,
+          weight: result.data.physical_properties.weight,
+          size: result.data.physical_properties.size,
+          sugar: result.data.nutritional_data.sugars,
+          firmness: result.data.physical_properties.firmness,
+          shelfLife: 14,
+          batchId: `${result.data.prediction.toUpperCase()}-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`,
+          origin: "Analysis Result",
+          storageTime: 0
+        };
+
+        setCurrentFruitData(newFruitData);
+        setSelectedFruit(result.data.prediction);
+      }
+    } catch (error) {
+      console.error('Analysis failed:', error);
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+      setSelectedImage(null);
+    }
   };
 
   useEffect(() => {
@@ -312,7 +371,7 @@ export default function Dashboard() {
                     label: "from yesterday",
                   }}
                 />
-                <MetricCard
+                {/* <MetricCard
                   title="Defects"
                   value={`${currentData.defects.toFixed(1)}%`}
                   icon={<Apple className="h-4 w-4 text-red-400" />}
@@ -323,6 +382,17 @@ export default function Dashboard() {
                     value: "1.5%",
                     label: "from last batch",
                   }}
+                /> */}
+                <MetricCard
+                  title="Prediction"
+                  value={`${currentData.prediction}`}
+                  icon={<Target className="h-4 w-4 text-blue-400" />}
+                  description="AI-powered quality prediction"
+                // trend={{
+                //   direction: currentData.predictionConfidence > 75 ? "up" : "down",
+                //   value: `${currentData.predictionConfidence}%`,
+                //   label: "confidence score"
+                // }}
                 />
               </div>
 
@@ -397,7 +467,7 @@ export default function Dashboard() {
                   <CardContent className="flex items-center justify-center">
                     <div className="relative w-full h-64 sm:h-80 md:h-96">
                       <img
-                        src="/assets/apple.png"
+                        src={imageUrl || "/assets/apple.png"}
                         alt={`${selectedFruit} image analysis`}
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -429,6 +499,38 @@ export default function Dashboard() {
             </TabsContent>
           </Tabs>
         </div>
+
+        <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
+          <DialogContent className="bg-gray-800 text-white">
+            <DialogHeader>
+              <DialogTitle>Upload Fruit Image for Analysis</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="w-full"
+              />
+              {imageUrl && (
+                <div className="relative w-full h-48">
+                  <img
+                    src={imageUrl}
+                    alt="Selected fruit"
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                </div>
+              )}
+              <Button
+                onClick={processAnalysis}
+                disabled={!selectedImage}
+                className="w-full"
+              >
+                Start Analysis
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
