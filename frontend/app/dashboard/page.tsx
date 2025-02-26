@@ -1,7 +1,6 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import Navbar from "@/components/Navbar";
+import { Navbar } from "@/components/home/Navbar";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 import { TabsContainer } from "@/components/dashboard/TabsContainer";
@@ -12,8 +11,12 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
 
 export default function Dashboard() {
+  const [isMounted, setIsMounted] = useState(false);
   const [selectedFruit, setSelectedFruit] = useState<string>("Apple");
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const {
     isAnalyzing,
@@ -30,6 +33,10 @@ export default function Dashboard() {
     setIsUploadDialogOpen,
     handleBatchSelect,
   } = useFruitAnalysis(selectedFruit);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>

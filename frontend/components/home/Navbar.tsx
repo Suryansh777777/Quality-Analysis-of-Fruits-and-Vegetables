@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
-const Navbar = () => {
+export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -190,4 +190,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+
