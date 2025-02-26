@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OverviewTab } from "./tabs/OverviewTab";
 import { AnalysisTab } from "./tabs/AnalysisTab";
-import { PredictionTab } from "./tabs/PredictionTab";
+// import { PredictionTab } from "./tabs/PredictionTab";
 import { BatchTab } from "./tabs/BatchTab";
 import type { FruitData, NutritionalData, ShelfLifePredictionData, BatchData } from "@/types/dashboard";
 
@@ -39,12 +39,12 @@ export function TabsContainer({
                 >
                     Detailed Analysis
                 </TabsTrigger>
-                <TabsTrigger
+                {/* <TabsTrigger
                     value="prediction"
                     className="flex-1 data-[state=active]:bg-gray-700 data-[state=active]:text-white"
                 >
                     Predictions
-                </TabsTrigger>
+                </TabsTrigger> */}
                 <TabsTrigger
                     value="batch"
                     className="flex-1 data-[state=active]:bg-gray-700 data-[state=active]:text-white"
@@ -69,9 +69,9 @@ export function TabsContainer({
                 />
             </TabsContent>
 
-            <TabsContent value="prediction">
+            {/* <TabsContent value="prediction">
                 <PredictionTab data={mockShelfLifePrediction} />
-            </TabsContent>
+            </TabsContent> */}
 
             <TabsContent value="batch">
                 <BatchTab

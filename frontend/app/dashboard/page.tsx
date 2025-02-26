@@ -12,66 +12,64 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
 
 export default function Dashboard() {
-    const [selectedFruit, setSelectedFruit] = useState<string>("Apple");
+  const [selectedFruit, setSelectedFruit] = useState<string>("Apple");
 
 
-    const {
-        isAnalyzing,
-        isUploadDialogOpen,
-        selectedImage,
-        imageUrl,
-        currentFruitData,
-        batchHistory,
-        handleAnalyze,
-        handleImageUpload,
-        handleUrlSubmit,
-        handleCameraCapture,
-        processAnalysis,
-        setIsUploadDialogOpen,
-        handleBatchSelect,
-    } = useFruitAnalysis(selectedFruit);
+  const {
+    isAnalyzing,
+    isUploadDialogOpen,
+    selectedImage,
+    imageUrl,
+    currentFruitData,
+    batchHistory,
+    handleAnalyze,
+    handleImageUpload,
+    handleUrlSubmit,
+    handleCameraCapture,
+    processAnalysis,
+    setIsUploadDialogOpen,
+    handleBatchSelect,
+  } = useFruitAnalysis(selectedFruit);
 
+  return (
+    <>
+      <Navbar />
+      <DashboardLayout>
+        <DashboardHeader
+          isAnalyzing={isAnalyzing}
+          onAnalyze={handleAnalyze}
+        />
 
+        <DashboardControls
+          selectedFruit={selectedFruit}
+          onFruitChange={setSelectedFruit}
+          fruits={Object.keys(mockData)}
+        />
 
-    return (
-        <>
-            <Navbar />
-            <DashboardLayout>
-                <DashboardHeader
-                    isAnalyzing={isAnalyzing}
-                    onAnalyze={handleAnalyze}
-                />
+        <TabsContainer
+          currentData={currentFruitData}
+          selectedFruit={selectedFruit}
+          mockNutritionalData={mockNutritionalData}
+          imageUrl={imageUrl}
+          mockShelfLifePrediction={mockShelfLifePrediction}
+          mockBatchHistory={batchHistory || mockBatchHistory}
+          onBatchSelect={handleBatchSelect}
+        />
 
-                <DashboardControls
-                    selectedFruit={selectedFruit}
-                    onFruitChange={setSelectedFruit}
-                    fruits={Object.keys(mockData)}
-                />
-
-                <TabsContainer
-                    currentData={currentFruitData}
-                    selectedFruit={selectedFruit}
-                    mockNutritionalData={mockNutritionalData}
-                    imageUrl={imageUrl}
-                    mockShelfLifePrediction={mockShelfLifePrediction}
-                    mockBatchHistory={batchHistory || mockBatchHistory}
-                    onBatchSelect={handleBatchSelect}
-                />
-
-                <UploadDialog
-                    isOpen={isUploadDialogOpen}
-                    onOpenChange={setIsUploadDialogOpen}
-                    imageUrl={imageUrl}
-                    onImageUpload={handleImageUpload}
-                    onUrlSubmit={handleUrlSubmit}
-                    onCameraCapture={handleCameraCapture}
-                    onAnalyze={processAnalysis}
-                    selectedImage={selectedImage}
-                    availableFruits={Object.keys(mockData)}
-                    selectedFruitType={selectedFruit}
-                    setSelectedFruitType={setSelectedFruit}
-                />
-            </DashboardLayout>
-        </>
-    );
+        <UploadDialog
+          isOpen={isUploadDialogOpen}
+          onOpenChange={setIsUploadDialogOpen}
+          imageUrl={imageUrl}
+          onImageUpload={handleImageUpload}
+          onUrlSubmit={handleUrlSubmit}
+          onCameraCapture={handleCameraCapture}
+          onAnalyze={processAnalysis}
+          selectedImage={selectedImage}
+          availableFruits={Object.keys(mockData)}
+          selectedFruitType={selectedFruit}
+          setSelectedFruitType={setSelectedFruit}
+        />
+      </DashboardLayout>
+    </>
+  );
 }
