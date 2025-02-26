@@ -1,5 +1,9 @@
-from app.quality_model import FruitQualityModel
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow logging
+from app.quality_model import FruitQualityModel
+from tensorflow.keras.preprocessing import image
+import numpy as np
+
 def test_model():
     try:
         # Initialize the model
@@ -8,30 +12,23 @@ def test_model():
         print("✅ Model loaded successfully!")
 
         # Test with a sample image
-        test_image_path = "image3.png"  # Update this path
+        test_image_path = "/home/surya/codes/Quality-Analysis-of-Fruits-and-Vegetables/backend/images/testimage3.png"
         if not os.path.exists(test_image_path):
             print("❌ Test image not found!")
             return
 
+        # Load and preprocess the image
+        print("\nLoading image...")
+        img = image.load_img(test_image_path)
+        img_array = image.img_to_array(img)
+
         print("\nTesting prediction...")
-        result = model_service.predict(test_image_path)
+        result = model_service.predict(img_array)
         
         print("\nPrediction Results:")
         print("==================")
-        print(f"Predicted Class: {result['prediction']}")
-        print(f"Confidence: {result['confidence']*100:.2f}%")
-        print(f"Quality Score: {result['quality_score']:.2f}")
-        
-        print("\nNutritional Data:")
-        print("================")
-        for key, value in result['nutritional_data'].items():
-            print(f"{key.capitalize()}: {value}")
-        
-        print("\nPhysical Properties:")
-        print("==================")
-        print(f"Weight: {result['physical_properties']['weight']}g")
-        print(f"Size: {result['physical_properties']['size']['length']}cm x {result['physical_properties']['size']['width']}cm")
-        print(f"Firmness: {result['physical_properties']['firmness']}%")
+        for key, value in result.items():
+            print(f"{key}: {value}")
         
         print("\n✅ Test completed successfully!")
 

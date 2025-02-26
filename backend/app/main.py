@@ -1,50 +1,48 @@
-# backend/app/main.py
-from fastapi import FastAPI, UploadFile, File
+# app/main.py
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import shutil
-import os
-from typing import Dict
-import tempfile
-from app.quality_model import FruitQualityModel 
+import numpy as np
+from PIL import Image
+import io
+from .quality_model import FruitQualityModel
 
 app = FastAPI()
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000"],  # Your Next.js frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize the model
+# Initialize model
 model = FruitQualityModel()
 
-@app.post("/api/analyze-fruit")
+@app.get("/")
+async def root():
+    return {"message": "Fruit Quality Analysis API"}
+
+@app.post("/api/analyze")
 async def analyze_fruit(file: UploadFile = File(...)):
     try:
-        # Create a temporary file to store the uploaded image
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
-            shutil.copyfileobj(file.file, temp_file)
-            temp_path = temp_file.name
-
-        # Analyze the image using the model
-        result = model.predict(temp_path)
-
-        # Clean up the temporary file
-        os.unlink(temp_path)
-
-        return {
-            "success": True,
-            "data": result
-        }
+        # Read and validate image file
+        if not file.content_type.startswith("image/"):
+            raise HTTPException(status_code=400, detail="File must be an image")
+        
+        # Read image file
+        contents = await file.read()
+        image = Image.open(io.BytesIO(contents))
+        
+        # Convert image to numpy array
+        img_array = np.array(image)
+        
+        # Get predictions from model
+        results = model.predict(img_array)
+        
+        return results
+    
     except Exception as e:
-        return {
-            "success": False,
-            "error": str(e)
-        }
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}

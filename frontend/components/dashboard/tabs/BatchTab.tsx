@@ -2,10 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { BatchTable } from "@/components/dashboard/BatchTable";
 
 interface BatchTabProps {
-    data: any; // Replace 'any' with proper type
+    data: BatchData[];
+    onBatchSelect: (batchId: string) => void;
 }
 
-export function BatchTab({ data }: BatchTabProps) {
+export function BatchTab({ data, onBatchSelect }: BatchTabProps) {
     return (
         <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
@@ -15,7 +16,7 @@ export function BatchTab({ data }: BatchTabProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <BatchTable data={data} />
+                <BatchTable data={data} onBatchSelect={onBatchSelect} />
             </CardContent>
         </Card>
     );

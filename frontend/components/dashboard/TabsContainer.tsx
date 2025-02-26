@@ -3,15 +3,16 @@ import { OverviewTab } from "./tabs/OverviewTab";
 import { AnalysisTab } from "./tabs/AnalysisTab";
 import { PredictionTab } from "./tabs/PredictionTab";
 import { BatchTab } from "./tabs/BatchTab";
-import type { FruitData } from "@/types/dashboard";
+import type { FruitData, NutritionalData, ShelfLifePredictionData, BatchData } from "@/types/dashboard";
 
 interface TabsContainerProps {
     currentData: FruitData;
     selectedFruit: string;
-    mockNutritionalData: any;
+    mockNutritionalData: Record<string, NutritionalData>;
     imageUrl: string;
-    mockShelfLifePrediction: any;
-    mockBatchHistory: any;
+    mockShelfLifePrediction: ShelfLifePredictionData;
+    mockBatchHistory: BatchData[];
+    onBatchSelect: (batchId: string) => void;
 }
 
 export function TabsContainer({
@@ -21,6 +22,7 @@ export function TabsContainer({
     imageUrl,
     mockShelfLifePrediction,
     mockBatchHistory,
+    onBatchSelect,
 }: TabsContainerProps) {
     return (
         <Tabs defaultValue="overview" className="w-full">
@@ -72,7 +74,10 @@ export function TabsContainer({
             </TabsContent>
 
             <TabsContent value="batch">
-                <BatchTab data={mockBatchHistory} />
+                <BatchTab
+                    data={mockBatchHistory}
+                    onBatchSelect={onBatchSelect}
+                />
             </TabsContent>
         </Tabs>
     );

@@ -1,20 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { FruitData, BatchData } from "@/types/dashboard";
+import { mockData,mockBatchHistory } from "@/app/data/mockData";
 
-import type { FruitData } from "@/types/dashboard";
-import { mockData } from "@/app/data/mockData";
 
 export function useFruitAnalysis(selectedFruit: string) {
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
-  const [currentFruitData, setCurrentFruitData] = useState<FruitData>(mockData.Apple);
+  const [currentFruitData, setCurrentFruitData] = useState<FruitData>(mockData[selectedFruit]);
+  const [batchHistory, setBatchHistory] = useState<BatchData[]>(mockBatchHistory);
+  const [error, setError] = useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError("File size too large. Please upload an image under 5MB.");
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        setError("Please upload a valid image file.");
+        return;
+      }
       setSelectedImage(file);
       setImageUrl(URL.createObjectURL(file));
+      setError(null);
+    }
+  };
+
+  const handleUrlSubmit = async (url: string) => {
+    try {
+      setError(null);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch image');
+      
+      const blob = await response.blob();
+      const file = new File([blob], "image.jpg", { type: blob.type });
+      setSelectedImage(file);
+      setImageUrl(URL.createObjectURL(file));
+    } catch (error) {
+      setError('Failed to load image from URL');
+      console.error('Failed to load image from URL:', error);
+    }
+  };
+
+  const handleCameraCapture = async () => {
+    try {
+      setError(null);
+      const response = await fetch('http://localhost:8000/api/capture-image');
+      if (!response.ok) throw new Error('Failed to capture image');
+
+      const blob = await response.blob();
+      const file = new File([blob], "camera-capture.jpg", { type: blob.type });
+      setSelectedImage(file);
+      setImageUrl(URL.createObjectURL(file));
+    } catch (error) {
+      setError('Failed to capture image from camera');
+      console.error('Failed to capture image:', error);
     }
   };
 
@@ -22,56 +65,68 @@ export function useFruitAnalysis(selectedFruit: string) {
     setIsUploadDialogOpen(true);
   };
 
-  const processAnalysis = async () => {
+  const processAnalysis = async (selectedFruitType: string) => {
     if (!selectedImage) return;
 
-    setIsAnalyzing(true);
-    setIsUploadDialogOpen(false);
-
-    const formData = new FormData();
-    formData.append('file', selectedImage);
-
     try {
-      const response = await fetch('http://localhost:8000/api/analyze-fruit', {
-        method: 'POST',
-        body: formData,
-      });
+      setIsAnalyzing(true);
+      setIsUploadDialogOpen(false);
+      setError(null);
 
-      const result = await response.json();
+      // For now, using mock data for the analysis result
+      const analysisResult = mockData[selectedFruitType];
+      
+      const newFruitData: FruitData = {
+        ...analysisResult,
+        batchId: `${selectedFruitType.toUpperCase()}-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`,
+      };
 
-      if (result.success) {
-        const fruitName = result.data.prediction
-          .split('_')
-          .pop()
-          .charAt(0).toUpperCase() +
-          result.data.prediction
-            .split('_')
-            .pop()
-            .slice(1).toLowerCase();
+      const newBatch = {
+        ...newFruitData,
+        fruitType: selectedFruitType,
+        bestBefore: new Date(Date.now() + newFruitData.shelfLife * 24 * 60 * 60 * 1000).toISOString(),
+        expectedQuality: Math.max(0, newFruitData.qualityScore - 10),
+      };
 
-        if (mockData[fruitName]) {
-          const newFruitData: FruitData = {
-            prediction: result.data.prediction,
-            qualityScore: result.data.quality_score,
-            pHLevel: 3.5,
-            ripeness: result.data.quality_score,
-            defects: 100 - result.data.quality_score,
-            temperature: 22,
-            humidity: 60,
-            weight: result.data.physical_properties.weight,
-            size: result.data.physical_properties.size,
-            sugar: result.data.nutritional_data.sugars,
-            firmness: result.data.physical_properties.firmness,
-            shelfLife: 14,
-            batchId: `${result.data.prediction.toUpperCase()}-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`,
-            origin: "Analysis Result",
-            storageTime: 0
-          };
+      // Update local state
+      setCurrentFruitData(newFruitData);
 
-          setCurrentFruitData(newFruitData);
+      // Save to database
+      try {
+        const response = await fetch('/api/batches', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newBatch),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save batch data');
         }
+
+        const savedBatch = await response.json();
+        
+        // Update batch history with the new batch
+        setBatchHistory(prev => [{
+          id: savedBatch.id,
+          receivedDate: savedBatch.receivedDate,
+          initialQuality: savedBatch.initialQuality,
+          currentQuality: savedBatch.currentQuality,
+          status: savedBatch.status,
+          predictions: {
+            bestBefore: savedBatch.bestBefore,
+            expectedQuality: savedBatch.expectedQuality,
+          },
+        }, ...prev]);
+
+      } catch (error) {
+        console.error('Failed to save batch:', error);
+        setError('Failed to save batch data');
       }
+
     } catch (error) {
+      setError('Analysis failed. Please try again.');
       console.error('Analysis failed:', error);
     } finally {
       setIsAnalyzing(false);
@@ -79,15 +134,54 @@ export function useFruitAnalysis(selectedFruit: string) {
     }
   };
 
+  const handleBatchSelect = async (batchId: string) => {
+    try {
+      setIsAnalyzing(true);
+      
+      // In production, this would be a DB query
+      const response = await fetch(`/api/batches/${batchId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch batch data');
+      }
+      
+      const batchData = await response.json();
+      setCurrentFruitData(batchData);
+      
+      // For now, using mock data until DB is set up
+      const selectedBatch = mockBatchHistory.find((batch: BatchData) => batch.id === batchId);
+      if (selectedBatch) {
+        const batchData: FruitData = {
+          ...mockData[selectedFruit],
+          batchId: selectedBatch.id,
+          qualityScore: selectedBatch.currentQuality,
+          // Add other specific batch data here
+        };
+        
+        setCurrentFruitData(batchData);
+      }
+    } catch (error) {
+      setError('Failed to load batch data');
+      console.error('Failed to load batch data:', error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+
   return {
     isAnalyzing,
     isUploadDialogOpen,
     selectedImage,
     imageUrl,
     currentFruitData,
+    batchHistory,
+    error,
     handleAnalyze,
     handleImageUpload,
+    handleUrlSubmit,
+    handleCameraCapture,
     processAnalysis,
     setIsUploadDialogOpen,
+    handleBatchSelect,
   };
 } 

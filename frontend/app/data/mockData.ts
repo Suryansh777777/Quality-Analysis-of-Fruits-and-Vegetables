@@ -1,41 +1,47 @@
 import { BatchData, FruitData, NutritionalData, ShelfLifePredictionData } from "@/types/dashboard";
 
-// Mock data (TypeScript interfaces should be defined in @/types/dashboard.ts)
+// Mock data 
 export const mockData: Record<string, FruitData> = {
-    Apple: {
-      prediction: "Grade A",
-      qualityScore: 85,
-      pHLevel: 3.5,
-      ripeness: 70,
-      defects: 5,
-      temperature: 22,
-      humidity: 60,
-      weight: 150,
-      size: { length: 7.5, width: 7.2 },
-      sugar: 14,
-      firmness: 75,
-      shelfLife: 14,
-      batchId: "APL-2024-001",
-      origin: "Local Farm A",
-      storageTime: 48,
+  "Apple": {
+    prediction: "Fresh",
+    qualityScore: 92,
+    pHLevel: 3.5,
+    ripeness: 85,
+    defects: 8,
+    temperature: 22,
+    humidity: 65,
+    weight: 180, // grams
+    size: {
+      length: 7.5, // cm
+      width: 7.2,  // cm
     },
-    Banana: {
-      prediction: "Grade A",
-      qualityScore: 78,
-      pHLevel: 4.8,
-      ripeness: 65,
-      defects: 8,
-      temperature: 23,
-      humidity: 65,
-      weight: 120,
-      size: { length: 20, width: 3.5 },
-      sugar: 12,
-      firmness: 60,
-      shelfLife: 7,
-      batchId: "BAN-2024-001",
-      origin: "Tropical Imports Inc.",
-      storageTime: 24,
+    sugar: 12.5,  // brix
+    firmness: 85, // scale 0-100
+    shelfLife: 14, // days
+    batchId: "APPLE-2024-001",
+    origin: "Washington, USA",
+    storageTime: 2 // days
+  },
+  "Banana": {
+    prediction: "Ripe",
+    qualityScore: 88,
+    pHLevel: 4.5,
+    ripeness: 90,
+    defects: 5,
+    temperature: 21,
+    humidity: 70,
+    weight: 120,
+    size: {
+      length: 18.0,
+      width: 3.5,
     },
+    sugar: 15.0,
+    firmness: 65,
+    shelfLife: 7,
+    batchId: "BANANA-2024-001",
+    origin: "Ecuador",
+    storageTime: 3
+  },
     Orange: {
       prediction: "Grade A",
       qualityScore: 90,

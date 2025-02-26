@@ -3,21 +3,13 @@ import { Switch } from "@/components/ui/switch";
 
 interface DashboardControlsProps {
     selectedFruit: string;
-    selectedTimeRange: string;
-    autoUpdateEnabled: boolean;
     onFruitChange: (value: string) => void;
-    onTimeRangeChange: (value: string) => void;
-    onAutoUpdateChange: (value: boolean) => void;
     fruits: string[];
 }
 
 export function DashboardControls({
     selectedFruit,
-    selectedTimeRange,
-    autoUpdateEnabled,
     onFruitChange,
-    onTimeRangeChange,
-    onAutoUpdateChange,
     fruits,
 }: DashboardControlsProps) {
     return (
@@ -35,7 +27,7 @@ export function DashboardControls({
                 </SelectContent>
             </Select>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4">
+            {/* <div className="flex flex-col sm:flex-row items-center gap-4">
                 <Select value={selectedTimeRange} onValueChange={onTimeRangeChange}>
                     <SelectTrigger className="w-full sm:w-[140px] bg-gray-800 border-gray-700 text-white">
                         <SelectValue placeholder="Time range" />
@@ -57,7 +49,7 @@ export function DashboardControls({
                         Auto Cycle
                     </label>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 } 

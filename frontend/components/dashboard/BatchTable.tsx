@@ -12,9 +12,10 @@ import { BatchData } from "@/types/dashboard";
 
 interface BatchTableProps {
   data: BatchData[];
+  onBatchSelect: (batchId: string) => void;
 }
 
-export function BatchTable({ data }: BatchTableProps) {
+export function BatchTable({ data, onBatchSelect }: BatchTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -29,7 +30,11 @@ export function BatchTable({ data }: BatchTableProps) {
       </TableHeader>
       <TableBody>
         {data.map((batch) => (
-          <TableRow key={batch.id}>
+          <TableRow
+            key={batch.id}
+            className="cursor-pointer hover:bg-gray-700/50 transition-colors"
+            onClick={() => onBatchSelect(batch.id)}
+          >
             <TableCell className="font-medium text-white">{batch.id}</TableCell>
             <TableCell className="text-gray-300">
               {batch.receivedDate}
