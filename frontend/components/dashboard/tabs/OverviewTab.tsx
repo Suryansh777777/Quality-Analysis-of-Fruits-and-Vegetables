@@ -4,6 +4,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { NutritionalChart } from "@/components/dashboard/NutritionalChart";
 import { PhysicalProperties } from "@/components/dashboard/PhysicalProperties";
 import type { FruitData } from "@/types/dashboard";
+import { FRUIT_PH_LEVELS } from "@/types/dashboard";
 
 interface OverviewTabProps {
     currentData: FruitData;
@@ -12,12 +13,27 @@ interface OverviewTabProps {
 }
 
 export function OverviewTab({ currentData, selectedFruit, mockNutritionalData }: OverviewTabProps) {
+    // Get pH range based on fruit type and ripeness
+    const phRange = currentData.ripeness ?
+        FRUIT_PH_LEVELS[currentData.fruitType][currentData.ripeness] :
+        { min: 0, max: 0 };
+
+    // Calculate average pH for display
+    const averagePh = (phRange.min + phRange.max) / 2;
+
+    // Map ripeness to percentage for display
+    const ripenessPercentage = {
+        'underripe': 33,
+        'ripe': 100,
+        'overripe': 66
+    }[currentData.ripeness || 'ripe'];
+
     return (
         <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <MetricCard
                     title="Quality Score"
-                    value={`${currentData.qualityScore.toFixed(1)}%`}
+                    value={`${currentData.qualityScore}%`}
                     icon={<Apple className="h-4 w-4 text-blue-400" />}
                     showProgress={true}
                     progress={currentData.qualityScore}
@@ -29,23 +45,19 @@ export function OverviewTab({ currentData, selectedFruit, mockNutritionalData }:
                 />
                 <MetricCard
                     title="pH Level"
-                    value={currentData.pHLevel.toFixed(2)}
+                    value={averagePh.toFixed(1)}
                     icon={<Apple className="h-4 w-4 text-blue-400" />}
                     showProgress={true}
-                    progress={(currentData.pHLevel / 14) * 100}
-                    description="Optimal range: 3.0 - 4.5"
+                    progress={(averagePh / 14) * 100}
+                    description={`Optimal range: ${phRange.min} - ${phRange.max}`}
                 />
                 <MetricCard
                     title="Ripeness"
-                    value={`${currentData.ripeness.toFixed(1)}%`}
+                    value={currentData.ripeness || 'N/A'}
                     icon={<Apple className="h-4 w-4 text-green-400" />}
                     showProgress={true}
-                    progress={currentData.ripeness}
-                    trend={{
-                        direction: "up",
-                        value: "2%",
-                        label: "from yesterday",
-                    }}
+                    progress={ripenessPercentage}
+                    description={`Current state: ${currentData.ripeness || 'Unknown'}`}
                 />
                 <MetricCard
                     title="Prediction"
@@ -74,9 +86,9 @@ export function OverviewTab({ currentData, selectedFruit, mockNutritionalData }:
                             Key measurements and characteristics
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    {/* <CardContent>
                         <PhysicalProperties data={currentData} />
-                    </CardContent>
+                    </CardContent> */}
                 </Card>
             </div>
         </>

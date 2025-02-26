@@ -1,150 +1,206 @@
-import { BatchData, FruitData, NutritionalData, ShelfLifePredictionData } from "@/types/dashboard";
+import { BatchData, FruitData, NutritionalData, FruitType, ShelfLifePredictionData } from "@/types/dashboard";
 
 // Mock data 
-export const mockData: Record<string, FruitData> = {
-  "Apple": {
-    prediction: "Fresh",
+export const mockData: Record<FruitType, FruitData> = {
+  apple: {
+    prediction: "fresh_apple_ripe",
+    fruitType: "apple",
+    freshness: "fresh",
+    ripeness: "ripe",
+    shelfLifeDays: 7,
+    confidence: 95,
     qualityScore: 92,
-    pHLevel: 3.5,
-    ripeness: 85,
-    defects: 8,
-    temperature: 22,
-    humidity: 65,
-    weight: 180, // grams
-    size: {
-      length: 7.5, // cm
-      width: 7.2,  // cm
-    },
-    sugar: 12.5,  // brix
-    firmness: 85, // scale 0-100
-    shelfLife: 14, // days
-    batchId: "APPLE-2024-001",
-    origin: "Washington, USA",
-    storageTime: 2 // days
+    storageMetrics: {
+      temperature: 4,
+      humidity: 90
+    }
   },
-  "Banana": {
-    prediction: "Ripe",
+  banana: {
+    prediction: "fresh_banana_ripe",
+    fruitType: "banana",
+    freshness: "fresh",
+    ripeness: "ripe",
+    shelfLifeDays: 5,
+    confidence: 88,
+    qualityScore: 85,
+    storageMetrics: {
+      temperature: 13,
+      humidity: 85
+    }
+  },
+  orange: {
+    prediction: "fresh_orange_ripe",
+    fruitType: "orange",
+    freshness: "fresh",
+    ripeness: "ripe",
+    shelfLifeDays: 10,
+    confidence: 92,
+    qualityScore: 90,
+    storageMetrics: {
+      temperature: 8,
+      humidity: 85
+    }
+  },
+  capsicum: {
+    prediction: "fresh_capsicum_ripe",
+    fruitType: "capsicum",
+    freshness: "fresh",
+    ripeness: "ripe",
+    shelfLifeDays: 7,
+    confidence: 89,
+    qualityScore: 87,
+    storageMetrics: {
+      temperature: 7,
+      humidity: 95
+    }
+  },
+  bitterground: {
+    prediction: "fresh_bitterground_ripe",
+    fruitType: "bitterground",
+    freshness: "fresh",
+    ripeness: "ripe",
+    shelfLifeDays: 6,
+    confidence: 86,
+    qualityScore: 84,
+    storageMetrics: {
+      temperature: 10,
+      humidity: 85
+    }
+  },
+  tomato: {
+    prediction: "fresh_tomato_ripe",
+    fruitType: "tomato",
+    freshness: "fresh",
+    ripeness: "ripe",
+    shelfLifeDays: 8,
+    confidence: 91,
     qualityScore: 88,
-    pHLevel: 4.5,
-    ripeness: 90,
-    defects: 5,
-    temperature: 21,
-    humidity: 70,
-    weight: 120,
-    size: {
-      length: 18.0,
-      width: 3.5,
-    },
-    sugar: 15.0,
-    firmness: 65,
-    shelfLife: 7,
-    batchId: "BANANA-2024-001",
-    origin: "Ecuador",
-    storageTime: 3
+    storageMetrics: {
+      temperature: 13,
+      humidity: 90
+    }
+  }
+};
+
+export const mockShelfLifePrediction: ShelfLifePredictionData = {
+  optimum: 14,
+  current: 10,
+  factors: [
+    { factor: "Temperature", impact: -1 },
+    { factor: "Humidity", impact: -2 },
+    { factor: "Initial Quality", impact: 1 },
+  ],
+};
+
+export const mockNutritionalData: Record<FruitType, NutritionalData> = {
+  apple: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [10.4, 2.4, 4.6, 1.6, 0.3],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
   },
-    Orange: {
-      prediction: "Grade A",
-      qualityScore: 90,
-      pHLevel: 3.8,
-      ripeness: 75,
-      defects: 3,
-      temperature: 21,
-      humidity: 55,
-      weight: 140,
-      size: { length: 7, width: 7 },
-      sugar: 10,
-      firmness: 80,
-      shelfLife: 21,
-      batchId: "ORG-2024-001",
-      origin: "Citrus Groves LLC",
-      storageTime: 72,
-    },
-  };
-  
-  export const mockShelfLifePrediction: ShelfLifePredictionData = {
-    optimum: 14,
-    current: 10,
-    factors: [
-      { factor: "Temperature", impact: -1 },
-      { factor: "Humidity", impact: -2 },
-      { factor: "Initial Quality", impact: 1 },
-    ],
-  };
-  
-  export const mockNutritionalData: Record<string, NutritionalData> = {
-    Apple: {
-      labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
-      datasets: [{
-        data: [10.4, 2.4, 4.6, 1.6, 0.3],
-        backgroundColor: [
-          "rgba(59, 130, 246, 0.6)",
-          "rgba(16, 185, 129, 0.6)",
-          "rgba(251, 191, 36, 0.6)",
-          "rgba(239, 68, 68, 0.6)",
-          "rgba(139, 92, 246, 0.6)",
-        ],
-      }],
-    },
-    Banana: {
-      labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
-      datasets: [{
-        data: [12.2, 2.6, 8.7, 3.2, 1.1],
-        backgroundColor: [
-          "rgba(59, 130, 246, 0.6)",
-          "rgba(16, 185, 129, 0.6)",
-          "rgba(251, 191, 36, 0.6)",
-          "rgba(239, 68, 68, 0.6)",
-          "rgba(139, 92, 246, 0.6)",
-        ],
-      }],
-    },
-    Orange: {
-      labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
-      datasets: [{
-        data: [9.3, 2.4, 12.1, 2.8, 0.9],
-        backgroundColor: [
-          "rgba(59, 130, 246, 0.6)",
-          "rgba(16, 185, 129, 0.6)",
-          "rgba(251, 191, 36, 0.6)",
-          "rgba(239, 68, 68, 0.6)",
-          "rgba(139, 92, 246, 0.6)",
-        ],
-      }],
-    },
-  };
-  
-  export const mockBatchHistory: BatchData[] = [
-    {
-      id: "APL-2024-001",
-      receivedDate: "2024-03-15",
-      initialQuality: 90,
-      currentQuality: 85,
-      status: "In Storage",
-      predictions: {
-        bestBefore: "2024-03-29",
-        expectedQuality: 75,
-      },
-    },
-    {
-      id: "BAN-2024-001",
-      receivedDate: "2024-03-18",
-      initialQuality: 85,
-      currentQuality: 78,
-      status: "In Transit",
-      predictions: {
-        bestBefore: "2024-03-25",
-        expectedQuality: 70,
-      },
-    },
-    {
-      id: "ORG-2024-001",
-      receivedDate: "2024-03-20",
-      initialQuality: 95,
-      currentQuality: 90,
-      status: "In Storage",
-      predictions: {
-        bestBefore: "2024-04-10",
-        expectedQuality: 80,
-      },
-    },
-  ];
+  banana: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [12.2, 2.6, 8.7, 3.2, 1.1],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  },
+  orange: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [9.3, 2.4, 12.1, 2.8, 0.9],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  },
+  capsicum: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [4.2, 1.7, 15.3, 2.1, 0.9],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  },
+  bitterground: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [3.7, 2.8, 8.4, 2.6, 1.0],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  },
+  tomato: {
+    labels: ["Sugars", "Fiber", "Vitamins", "Minerals", "Proteins"],
+    datasets: [{
+      data: [3.9, 1.2, 13.7, 2.4, 0.9],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.6)",
+        "rgba(16, 185, 129, 0.6)",
+        "rgba(251, 191, 36, 0.6)",
+        "rgba(239, 68, 68, 0.6)",
+        "rgba(139, 92, 246, 0.6)",
+      ],
+    }],
+  }
+};
+
+export const mockBatchHistory: BatchData[] = [
+  {
+    id: "BATCH-001",
+    timestamp: new Date("2024-03-15"),
+    status: "active",
+    notes: "First batch of the day",
+    fruitData: mockData.apple
+  },
+  {
+    id: "BATCH-002",
+    timestamp: new Date("2024-03-15"),
+    status: "active",
+    notes: "Second batch",
+    fruitData: {
+      ...mockData.banana,
+      ripeness: "underripe",
+      prediction: "fresh_banana_underripe"
+    }
+  },
+  {
+    id: "BATCH-003",
+    timestamp: new Date("2024-03-16"),
+    status: "active",
+    notes: "Morning batch",
+    fruitData: {
+      ...mockData.orange,
+      ripeness: "overripe",
+      prediction: "fresh_orange_overripe"
+    }
+  }
+];

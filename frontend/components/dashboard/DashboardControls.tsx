@@ -1,9 +1,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-
+import { FruitType } from "@/types/dashboard";
 interface DashboardControlsProps {
     selectedFruit: string;
-    onFruitChange: (value: string) => void;
+    onFruitChange: (value: FruitType) => void;
     fruits: string[];
 }
 

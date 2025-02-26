@@ -1,37 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Batch {
-  id             String   @id
-  fruitType      String
-  receivedDate   DateTime
-  initialQuality Float
-  currentQuality Float
-  status         String
-  bestBefore     DateTime
-  expectedQuality Float
+  id        String   @id @default(cuid())
+  timestamp DateTime @default(now())
+  status    String   @default("active") // 'active' | 'archived'
+  notes     String?
+
+  // FruitData fields
+  prediction     String  // FruitLabel
+  fruitType     String  // FruitType
+  freshness     String  // Freshness
+  ripeness      String? // Ripeness
+  shelfLifeDays Int
+  confidence    Float
+  qualityScore  Int
   
-  // Fruit analysis data
-  prediction      String
-  pHLevel         Float
-  ripeness        Float
-  defects         Float
-  temperature     Float
-  humidity        Float
-  weight          Float
-  size            Json    // Stored as { length: number, width: number }
-  sugar           Float
-  firmness        Float
-  shelfLife       Int
-  origin          String
-  storageTime     Int
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  // Storage metrics
+  temperature Float
+  humidity    Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([fruitType])
+  @@index([freshness])
+  @@index([timestamp])
 } 

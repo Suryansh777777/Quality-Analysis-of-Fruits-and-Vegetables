@@ -9,10 +9,11 @@ import { useFruitAnalysis } from "@/hooks/useFruitAnalysis"; // We'll create thi
 import { mockData, mockNutritionalData, mockShelfLifePrediction, mockBatchHistory } from "../data/mockData";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
+import { FruitType } from "@/types/dashboard";
 
 export default function Dashboard() {
   const [isMounted, setIsMounted] = useState(false);
-  const [selectedFruit, setSelectedFruit] = useState<string>("Apple");
+  const [selectedFruit, setSelectedFruit] = useState<FruitType>("apple");
 
   useEffect(() => {
     setIsMounted(true);
@@ -37,7 +38,7 @@ export default function Dashboard() {
   if (!isMounted) {
     return null;
   }
-
+  console.log({ currentFruitData });
   return (
     <>
       <Navbar />

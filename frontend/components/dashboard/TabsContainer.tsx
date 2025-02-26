@@ -4,10 +4,11 @@ import { AnalysisTab } from "./tabs/AnalysisTab";
 // import { PredictionTab } from "./tabs/PredictionTab";
 import { BatchTab } from "./tabs/BatchTab";
 import type { FruitData, NutritionalData, ShelfLifePredictionData, BatchData } from "@/types/dashboard";
+import { FruitType } from "@/types/dashboard";
 
 interface TabsContainerProps {
-    currentData: FruitData;
-    selectedFruit: string;
+    currentData: FruitData | null;
+    selectedFruit: FruitType;
     mockNutritionalData: Record<string, NutritionalData>;
     imageUrl: string;
     mockShelfLifePrediction: ShelfLifePredictionData;

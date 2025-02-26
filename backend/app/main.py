@@ -1,48 +1,42 @@
 # app/main.py
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-import numpy as np
-from PIL import Image
-import io
-from .quality_model import FruitQualityModel
+from app.quality_model import QualityModel
+import os
 
 app = FastAPI()
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your Next.js frontend URL
+    allow_origins=["*"],  # In production, replace with specific origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Initialize model
-model = FruitQualityModel()
+MODEL_PATH = os.getenv("MODEL_PATH", "models/deep_model.h5")
+quality_model = QualityModel(MODEL_PATH)
 
-@app.get("/")
-async def root():
-    return {"message": "Fruit Quality Analysis API"}
-
-@app.post("/api/analyze")
-async def analyze_fruit(file: UploadFile = File(...)):
+@app.post("/predict")
+async def predict_image(file: UploadFile = File(...)):
+    """
+    Endpoint to predict fruit quality from uploaded image
+    """
     try:
-        # Read and validate image file
-        if not file.content_type.startswith("image/"):
-            raise HTTPException(status_code=400, detail="File must be an image")
-        
-        # Read image file
         contents = await file.read()
-        image = Image.open(io.BytesIO(contents))
-        
-        # Convert image to numpy array
-        img_array = np.array(image)
-        
-        # Get predictions from model
-        results = model.predict(img_array)
-        
-        return results
+        prediction = quality_model.predict(contents)
+        print(prediction)
+        return prediction
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {"error": str(e)}
+
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint
+    """
+    return {"status": "healthy"}
 

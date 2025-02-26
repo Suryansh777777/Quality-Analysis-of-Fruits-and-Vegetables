@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
+import { FruitType } from "@/types/dashboard";
 interface UploadDialogProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
@@ -15,7 +15,7 @@ interface UploadDialogProps {
     availableFruits: string[];
     error?: string | null;
     selectedFruitType: string;
-    setSelectedFruitType: (fruit: string) => void;
+    setSelectedFruitType: (fruit: FruitType) => void;
 }
 
 export function UploadDialog({
@@ -78,7 +78,7 @@ export function UploadDialog({
                     <select
                         className="w-full p-2 bg-gray-700 rounded-md"
                         value={selectedFruitType}
-                        onChange={(e) => setSelectedFruitType(e.target.value)}
+                        onChange={(e) => setSelectedFruitType(e.target.value as FruitType)}
                     >
                         <option value="">Select Fruit/Vegetable Type</option>
                         {availableFruits.map(fruit => (

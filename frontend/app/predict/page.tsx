@@ -4,11 +4,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 
-// Update interface to match actual API response
+// Update interface to match the actual API response
 interface AnalysisResult {
-    Freshness: string;
-    Ripeness?: string;
-    "Shelf Life"?: string;
+    predicted_class: string;
+    freshness: string;
+    ripeness: string | null;
+    shelf_life_days: number;
+    confidence: number;
 }
 
 export default function Predict() {
@@ -39,7 +41,7 @@ export default function Predict() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/analyze', {
+            const response = await fetch('http://localhost:8000/predict', {  // Updated endpoint
                 method: 'POST',
                 body: formData,
             });
@@ -49,7 +51,13 @@ export default function Predict() {
             }
 
             const data: AnalysisResult = await response.json();
-            setResults(data);
+            setResults({
+                predicted_class: data.predicted_class,
+                freshness: data.freshness,
+                ripeness: data.ripeness || null,
+                shelf_life_days: data.shelf_life_days,
+                confidence: data.confidence
+            });
         } catch (error) {
             console.error('Error analyzing image:', error);
             setError(error instanceof Error ? error.message : 'An error occurred while analyzing the image');
@@ -114,27 +122,41 @@ export default function Predict() {
                                 <div>
                                     <h3 className="text-lg font-medium">Freshness</h3>
                                     <p className="text-2xl font-bold text-blue-600">
-                                        {results.Freshness}
+                                        {results.freshness}
                                     </p>
                                 </div>
 
-                                {results.Ripeness && (
+                                {results.ripeness && (
                                     <div>
                                         <h3 className="text-lg font-medium">Ripeness</h3>
                                         <p className="text-2xl font-bold text-green-600">
-                                            {results.Ripeness}
+                                            {results.ripeness}
                                         </p>
                                     </div>
                                 )}
 
-                                {results["Shelf Life"] && (
+                                {results.shelf_life_days && (
                                     <div>
                                         <h3 className="text-lg font-medium">Shelf Life</h3>
                                         <p className="text-2xl font-bold text-orange-600">
-                                            {results["Shelf Life"]}
+                                            {results.shelf_life_days}
                                         </p>
                                     </div>
                                 )}
+                                <div>
+                                    <h3 className="text-lg font-medium">Confidence</h3>
+                                    <p className="text-2xl font-bold text-gray-600">
+                                        {results.confidence.toFixed(2)}
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-medium">Predicted Class</h3>
+                                    <p className="text-2xl font-bold text-gray-600">
+                                        {results.predicted_class}
+                                    </p>
+                                </div>
+
+
                             </div>
                         </CardContent>
                     </Card>

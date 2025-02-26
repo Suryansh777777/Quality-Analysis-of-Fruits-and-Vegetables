@@ -1,99 +1,115 @@
-import numpy as np
+# app/quality_model.py
 import tensorflow as tf
-from tensorflow.keras.preprocessing import image
-import json
+from tensorflow.keras.models import load_model
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.utils import register_keras_serializable
+from tensorflow.keras.preprocessing.image import img_to_array
+import numpy as np
+import io
+from PIL import Image
 
-class FruitQualityModel:
-    def __init__(self):
-        # Load model
-        self.model_path = "models/fruit_quality_model.h5"
-        self.model = tf.keras.models.load_model(self.model_path)
-        self.model.compile(optimizer="adam", 
-                          loss="categorical_crossentropy", 
-                          metrics=["accuracy"])
+@register_keras_serializable()
+class FixedDropout(Dropout):
+    def _get_noise_shape(self, inputs):
+        if self.noise_shape is None:
+            return self.noise_shape
+        return tuple([inputs.shape[i] if self.noise_shape[i] is None else self.noise_shape[i]
+                     for i in range(len(self.noise_shape))])
 
-        # Load class indices
-        self.class_indices_path = "models/class_indices.json"
-        with open(self.class_indices_path, "r") as f:
-            class_indices = json.load(f)
-        
-        # Reverse class indices for prediction lookup
-        self.class_labels = {v: k for k, v in class_indices.items()}
+@register_keras_serializable()
+def swish(x):
+    return x * tf.sigmoid(x)
 
-        # Define shelf life mapping
-        self.shelf_life_mapping = {
-            "fresh_apple_ripe": 5, "fresh_apple_underripe": 12, "fresh_apple_overripe": 2,
-            "fresh_banana_ripe": 5, "fresh_banana_underripe": 12, "fresh_banana_overripe": 2,
-            "fresh_orange_ripe": 7, "fresh_orange_underripe": 15, "fresh_orange_overripe": 3,
-            "fresh_bitter_gourd": 6, "rotten_bitter_gourd": 0,
-            "fresh_capsicum": 10, "rotten_capsicum": 0,
-            "fresh_tomato": 7, "rotten_tomato": 0,
-            "rotten_apple": 0, "rotten_banana": 0, "rotten_orange": 0
+class QualityModel:
+    def __init__(self, model_path):
+        # Register all the custom objects needed
+        custom_objects = {
+            'swish': swish,
+            'FixedDropout': FixedDropout
         }
-
-    def preprocess_image(self, img_data):
-        """Preprocess the input image for model prediction."""
-        try:
-            # Convert to RGB if needed
-            if len(img_data.shape) == 2:
-                img_data = np.stack((img_data,) * 3, axis=-1)
-            
-            # Resize image
-            img_data = tf.image.resize(img_data, (224, 224))
-            
-            # Normalize pixel values
-            img_data = img_data / 255.0
-            
-            # Add batch dimension
-            img_data = np.expand_dims(img_data, axis=0)
-            
-            return img_data
         
-        except Exception as e:
-            raise Exception(f"Image preprocessing failed: {str(e)}")
-
-    def predict(self, image_data):
-        """Make predictions on the input image."""
         try:
-            # Preprocess image
-            processed_image = self.preprocess_image(image_data)
-            
-            # Get model predictions
-            predictions = self.model.predict(processed_image)
-            predicted_class_idx = np.argmax(predictions)
-            
-            # Debug logging
-            print("🔹 Raw Model Predictions:", predictions)
-            print("🔹 Predicted Class Index:", predicted_class_idx)
-            
-            # Validate predicted class
-            if predicted_class_idx not in self.class_labels:
-                raise ValueError(f"Invalid class index {predicted_class_idx}. Check model training.")
-            
-            class_name = self.class_labels[predicted_class_idx]
-            print("🔹 Predicted Class Name:", class_name)
-
-            # Determine freshness
-            freshness = "Rotten" if "rotten" in class_name else "Fresh"
-
-            # Determine ripeness level
-            ripeness = None
-            if "fresh" in class_name:
-                parts = class_name.split("_")
-                if len(parts) > 2:
-                    ripeness = parts[-1]
-
-            # Determine shelf life
-            shelf_life = self.shelf_life_mapping.get(class_name, "Unknown")
-
-            # Prepare results
-            result = {"Freshness": freshness}
-            if freshness == "Fresh" and ripeness:
-                result["Ripeness"] = ripeness.capitalize()
-            if freshness == "Fresh" or shelf_life == 0:
-                result["Shelf Life"] = f"{shelf_life} days"
-
-            return result
-
+            # Try loading with custom objects
+            self.model = load_model(model_path, custom_objects=custom_objects)
         except Exception as e:
-            raise Exception(f"Prediction failed: {str(e)}")
+            print(f"Error loading model: {str(e)}")
+            # Alternative: If you can't load the model, you might need to rebuild it
+            # This would be a placeholder for a rebuild function
+            raise
+        
+        # Define class labels and shelf life mapping (same as before)
+        self.class_labels = [
+            'fresh_apple_ripe', 'fresh_apple_underripe', 'fresh_apple_overripe',
+            'fresh_banana_ripe', 'fresh_banana_underripe', 'fresh_banana_overripe',
+            'fresh_orange_ripe', 'fresh_orange_underripe', 'fresh_orange_overripe',
+            'fresh_capsicum_ripe', 'fresh_capsicum_underripe', 'fresh_capsicum_overripe',
+            'fresh_bitterground_ripe', 'fresh_bitterground_underripe', 'fresh_bitterground_overripe',
+            'fresh_tomato_ripe', 'fresh_tomato_underripe', 'fresh_tomato_overripe',
+            'rotten_apple', 'rotten_banana', 'rotten_orange',
+            'rotten_capsicum', 'rotten_bitterground', 'rotten_tomato'
+        ]
+        
+        self.shelf_life = {
+            'fresh_apple_ripe': 7, 'fresh_apple_underripe': 10, 'fresh_apple_overripe': 3,
+            'fresh_banana_ripe': 5, 'fresh_banana_underripe': 7, 'fresh_banana_overripe': 2,
+            'fresh_orange_ripe': 10, 'fresh_orange_underripe': 14, 'fresh_orange_overripe': 5,
+            'fresh_capsicum_ripe': 7, 'fresh_capsicum_underripe': 10, 'fresh_capsicum_overripe': 3,
+            'fresh_bitterground_ripe': 6, 'fresh_bitterground_underripe': 8, 'fresh_bitterground_overripe': 2,
+            'fresh_tomato_ripe': 8, 'fresh_tomato_underripe': 12, 'fresh_tomato_overripe': 4,
+            'rotten_apple': 0, 'rotten_banana': 0, 'rotten_orange': 0,
+            'rotten_capsicum': 0, 'rotten_bitterground': 0, 'rotten_tomato': 0
+        }
+    
+    
+    def preprocess_image(self, image_data):
+        """Process image data from bytes or file path"""
+        if isinstance(image_data, bytes):
+            # If image is provided as bytes (from API upload)
+            image = Image.open(io.BytesIO(image_data))
+            image = image.resize((224, 224))
+        else:
+            # If image is provided as file path
+            image = load_img(image_data, target_size=(224, 224))
+        
+        # Convert to array and normalize
+        img_array = img_to_array(image)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array = img_array / 255.0
+        
+        return img_array
+    
+    def predict(self, image_data):
+        """Predict the quality of a fruit/vegetable image"""
+        # Preprocess the image
+        processed_image = self.preprocess_image(image_data)
+        
+        # Make prediction
+        predictions = self.model.predict(processed_image)
+        predicted_class_index = np.argmax(predictions, axis=1)[0]
+        predicted_class = self.class_labels[predicted_class_index]
+        confidence = float(predictions[0][predicted_class_index])
+        
+        # Parse fruit type and state
+        parts = predicted_class.split('_')
+        freshness = parts[0]  # 'fresh' or 'rotten'
+        fruit_type = parts[1]  # 'apple', 'banana', etc.
+        
+        # Determine ripeness (if fresh)
+        ripeness = None
+        if freshness == "fresh" and len(parts) > 2:
+            ripeness = parts[2]  # 'ripe', 'underripe', or 'overripe'
+        
+        # Get shelf life
+        shelf_life_days = self.shelf_life.get(predicted_class, 0)
+        
+        # Prepare result
+        result = {
+            "class": predicted_class,
+            "fruit_type": fruit_type,
+            "freshness": freshness,
+            "ripeness": ripeness,
+            "shelf_life_days": shelf_life_days,
+            "confidence": round(confidence * 100, 2)
+        }
+        
+        return result
