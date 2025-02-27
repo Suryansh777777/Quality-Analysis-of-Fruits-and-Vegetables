@@ -2,7 +2,7 @@ import { Apple, Target } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { NutritionalChart } from "@/components/dashboard/NutritionalChart";
-import { PhysicalProperties } from "@/components/dashboard/PhysicalProperties";
+import { IdealConditions } from "@/components/dashboard/IdealConditions";
 import type { FruitData } from "@/types/dashboard";
 import { FRUIT_PH_LEVELS } from "@/types/dashboard";
 
@@ -81,14 +81,14 @@ export function OverviewTab({ currentData, selectedFruit, mockNutritionalData }:
                 </Card>
                 <Card className="bg-gray-800 border-gray-700">
                     <CardHeader>
-                        <CardTitle className="text-white">Physical Properties</CardTitle>
+                        <CardTitle className="text-white">Ideal Conditions</CardTitle>
                         <CardDescription className="text-gray-400">
-                            Key measurements and characteristics
+                            Optimal storage and handling parameters
                         </CardDescription>
                     </CardHeader>
-                    {/* <CardContent>
-                        <PhysicalProperties data={currentData} />
-                    </CardContent> */}
+                    <CardContent>
+                        <IdealConditions fruitType={selectedFruit} currentData={currentData} />
+                    </CardContent>
                 </Card>
             </div>
         </>

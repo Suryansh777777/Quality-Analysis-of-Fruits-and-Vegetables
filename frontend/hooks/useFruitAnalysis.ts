@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type {
   FruitType,
   FruitData,
@@ -24,6 +24,38 @@ export function useFruitAnalysis(selectedFruit: FruitType) {
   const [currentFruitData, setCurrentFruitData] = useState<FruitData | null>(mockData[selectedFruit]);
   const [batchHistory, setBatchHistory] = useState<BatchData[]>(mockBatchHistory);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch initial data from database
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        // Fetch latest batch data for the selected fruit
+        const response = await fetch(`/api/batches?fruitType=${selectedFruit}&limit=1`);
+        if (!response.ok) throw new Error("Failed to fetch current fruit data");
+        const latestBatch = await response.json();
+        
+        if (latestBatch && latestBatch.length > 0) {
+          setCurrentFruitData(latestBatch[0].fruitData);
+        }
+
+        // Fetch batch history
+        const historyResponse = await fetch(`/api/batches?fruitType=${selectedFruit}&limit=10`);
+        if (!historyResponse.ok) throw new Error("Failed to fetch batch history");
+        const history = await historyResponse.json();
+        
+        if (history && history.length > 0) {
+          setBatchHistory(history);
+        }
+      } catch (error) {
+        console.warn("Failed to fetch data from database, using mock data:", error);
+        // Fallback to mock data if API fails
+        setCurrentFruitData(mockData[selectedFruit]);
+        setBatchHistory(mockBatchHistory);
+      }
+    };
+
+    fetchInitialData();
+  }, [selectedFruit]); // Re-fetch when selected fruit changes
 
   // Image handling methods
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,28 +221,28 @@ export function useFruitAnalysis(selectedFruit: FruitType) {
     }
   };
 
-  const handleBatchSelect = async (batchId: string) => {
-    try {
-      setIsAnalyzing(true);
-      const response = await fetch(`/api/batches/${batchId}`);
+  // const handleBatchSelect = async (batchId: string) => {
+  //   try {
+  //     setIsAnalyzing(true);
+  //     const response = await fetch(`/api/batches/${batchId}`);
       
-      if (!response.ok) throw new Error("Failed to fetch batch data");
+  //     if (!response.ok) throw new Error("Failed to fetch batch data");
 
-      const batchData: BatchData = await response.json();
-      setCurrentFruitData(batchData.fruitData);
-    } catch (error) {
-      console.warn("Failed to load batch, using mock data:", error);
-      // Use mock data if API fails
-      const mockBatch = mockBatchHistory.find(b => b.id === batchId);
-      if (mockBatch) {
-        setCurrentFruitData(mockBatch.fruitData);
-      } else {
-        setCurrentFruitData(mockData[selectedFruit]);
-      }
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
+  //     const batchData: BatchData = await response.json();
+  //     setCurrentFruitData(batchData.fruitData);
+  //   } catch (error) {
+  //     console.warn("Failed to load batch, using mock data:", error);
+  //     // Use mock data if API fails
+  //     const mockBatch = mockBatchHistory.find(b => b.id === batchId);
+  //     if (mockBatch) {
+  //       setCurrentFruitData(mockBatch.fruitData);
+  //     } else {
+  //       setCurrentFruitData(mockData[selectedFruit]);
+  //     }
+  //   } finally {
+  //     setIsAnalyzing(false);
+  //   }
+  // };
 
   // Return hook values and methods
   return {
@@ -227,6 +259,6 @@ export function useFruitAnalysis(selectedFruit: FruitType) {
     handleCameraCapture,
     processAnalysis,
     setIsUploadDialogOpen,
-    handleBatchSelect,
+    // handleBatchSelect,
   };
 }

@@ -4,10 +4,10 @@ import { BatchData } from "@/types/dashboard";
 
 interface BatchTabProps {
     data: BatchData[];
-    onBatchSelect: (batchId: string) => void;
+
 }
 
-export function BatchTab({ data, onBatchSelect }: BatchTabProps) {
+export function BatchTab({ data }: BatchTabProps) {
     return (
         <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
@@ -17,7 +17,7 @@ export function BatchTab({ data, onBatchSelect }: BatchTabProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <BatchTable data={data} onBatchSelect={onBatchSelect} />
+                <BatchTable data={data} />
             </CardContent>
         </Card>
     );

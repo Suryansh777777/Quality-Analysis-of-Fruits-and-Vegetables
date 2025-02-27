@@ -32,7 +32,7 @@ export default function Dashboard() {
     handleCameraCapture,
     processAnalysis,
     setIsUploadDialogOpen,
-    handleBatchSelect,
+    // handleBatchSelect,
   } = useFruitAnalysis(selectedFruit);
 
   if (!isMounted) {
@@ -61,7 +61,7 @@ export default function Dashboard() {
           imageUrl={imageUrl}
           mockShelfLifePrediction={mockShelfLifePrediction}
           mockBatchHistory={batchHistory || mockBatchHistory}
-          onBatchSelect={handleBatchSelect}
+        // onBatchSelect={handleBatchSelect}
         />
 
         <UploadDialog

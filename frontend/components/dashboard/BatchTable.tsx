@@ -12,20 +12,19 @@ import { BatchData } from "@/types/dashboard";
 
 interface BatchTableProps {
   data: BatchData[];
-  onBatchSelect: (batchId: string) => void;
 }
 
-export function BatchTable({ data, onBatchSelect }: BatchTableProps) {
+export function BatchTable({ data }: BatchTableProps) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="text-gray-300">Batch ID</TableHead>
-          <TableHead className="text-gray-300">Received Date</TableHead>
-          <TableHead className="text-gray-300">Initial Quality</TableHead>
-          <TableHead className="text-gray-300">Current Quality</TableHead>
+          <TableHead className="text-gray-300">Timestamp</TableHead>
+          <TableHead className="text-gray-300">Fruit Type</TableHead>
+          <TableHead className="text-gray-300">Quality Score</TableHead>
           <TableHead className="text-gray-300">Status</TableHead>
-          <TableHead className="text-gray-300">Best Before</TableHead>
+          <TableHead className="text-gray-300">Shelf Life</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -33,23 +32,22 @@ export function BatchTable({ data, onBatchSelect }: BatchTableProps) {
           <TableRow
             key={batch.id}
             className="cursor-pointer hover:bg-gray-700/50 transition-colors"
-            onClick={() => onBatchSelect(batch.id)}
           >
             <TableCell className="font-medium text-white">{batch.id}</TableCell>
             <TableCell className="text-gray-300">
-              {batch.receivedDate}
+              {new Date(batch.timestamp).toLocaleDateString()}
             </TableCell>
             <TableCell className="text-gray-300">
-              {batch.initialQuality}%
+              {batch.fruitData.fruitType}
             </TableCell>
             <TableCell className="text-gray-300">
-              {batch.currentQuality}%
+              {batch.fruitData.qualityScore}%
             </TableCell>
             <TableCell>
               <BatchStatusBadge status={batch.status} />
             </TableCell>
             <TableCell className="text-gray-300">
-              {batch.predictions.bestBefore}
+              {batch.fruitData.shelfLifeDays} days
             </TableCell>
           </TableRow>
         ))}
@@ -61,14 +59,11 @@ export function BatchTable({ data, onBatchSelect }: BatchTableProps) {
 function BatchStatusBadge({ status }: { status: string }) {
   let badgeClass = "";
   switch (status.toLowerCase()) {
-    case "in storage":
-      badgeClass = "bg-blue-500 hover:bg-blue-600";
-      break;
-    case "in transit":
-      badgeClass = "bg-yellow-500 hover:bg-yellow-600";
-      break;
-    case "delivered":
+    case "active":
       badgeClass = "bg-green-500 hover:bg-green-600";
+      break;
+    case "archived":
+      badgeClass = "bg-gray-500 hover:bg-gray-600";
       break;
     default:
       badgeClass = "bg-gray-500 hover:bg-gray-600";

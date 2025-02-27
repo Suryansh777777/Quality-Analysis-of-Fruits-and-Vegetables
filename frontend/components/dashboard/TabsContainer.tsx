@@ -7,13 +7,13 @@ import type { FruitData, NutritionalData, ShelfLifePredictionData, BatchData } f
 import { FruitType } from "@/types/dashboard";
 
 interface TabsContainerProps {
-    currentData: FruitData | null;
+    currentData: FruitData;
     selectedFruit: FruitType;
     mockNutritionalData: Record<string, NutritionalData>;
     imageUrl: string;
     mockShelfLifePrediction: ShelfLifePredictionData;
     mockBatchHistory: BatchData[];
-    onBatchSelect: (batchId: string) => void;
+
 }
 
 export function TabsContainer({
@@ -23,7 +23,6 @@ export function TabsContainer({
     imageUrl,
     mockShelfLifePrediction,
     mockBatchHistory,
-    onBatchSelect,
 }: TabsContainerProps) {
     return (
         <Tabs defaultValue="overview" className="w-full">
@@ -77,7 +76,6 @@ export function TabsContainer({
             <TabsContent value="batch">
                 <BatchTab
                     data={mockBatchHistory}
-                    onBatchSelect={onBatchSelect}
                 />
             </TabsContent>
         </Tabs>
