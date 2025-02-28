@@ -17,16 +17,25 @@ export function OverviewTab({ currentData, selectedFruit, mockNutritionalData }:
     const phRange = currentData.ripeness ?
         FRUIT_PH_LEVELS[currentData.fruitType][currentData.ripeness] :
         { min: 0, max: 0 };
+    console.log(currentData.ripeness);
 
     // Calculate average pH for display
     const averagePh = (phRange.min + phRange.max) / 2;
 
-    // Map ripeness to percentage for display
-    const ripenessPercentage = {
-        'underripe': 33,
-        'ripe': 100,
-        'overripe': 66
-    }[currentData.ripeness || 'ripe'];
+    type RipenessState = 'underripe' | 'ripe' | 'overripe';
+
+    const getRipenessPercentage = (ripeness: string | undefined) => {
+        const ranges = {
+            'underripe': { min: 15, max: 35 },
+            'ripe': { min: 65, max: 85 },
+            'overripe': { min: 90, max: 100 }
+        } as const;
+
+        const range = ranges[(ripeness) as RipenessState];
+        return Math.floor(Math.random() * (range.max - range.min + 1) + range.min);
+    };
+
+    const ripenessPercentage = getRipenessPercentage(currentData.ripeness);
 
     return (
         <>
@@ -53,7 +62,7 @@ export function OverviewTab({ currentData, selectedFruit, mockNutritionalData }:
                 />
                 <MetricCard
                     title="Ripeness"
-                    value={currentData.ripeness || 'N/A'}
+                    value={`${ripenessPercentage}%`}
                     icon={<Apple className="h-4 w-4 text-green-400" />}
                     showProgress={true}
                     progress={ripenessPercentage}

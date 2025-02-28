@@ -43,40 +43,43 @@ export function UploadDialog({
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="bg-gray-800 text-white max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>Upload Fruit Image for Analysis</DialogTitle>
+            <DialogContent className="bg-gray-800 text-white sm:max-w-2xl w-[95vw] p-6">
+                <DialogHeader className="mb-6">
+                    <DialogTitle className="text-2xl font-bold text-center">Upload Fruit Image for Analysis</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {error && (
-                        <Alert variant="destructive">
-                            <AlertDescription>{error}</AlertDescription>
+                        <Alert variant="destructive" className="border-red-500 bg-red-500/10">
+                            <AlertDescription className="text-red-200">{error}</AlertDescription>
                         </Alert>
                     )}
 
-                    <div className="flex space-x-4 mb-4">
+                    <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
                         <Button
                             onClick={() => setImageSource('upload')}
                             variant={imageSource === 'upload' ? "default" : "secondary"}
+                            className="flex-1 sm:flex-none min-w-[120px]"
                         >
                             Upload File
                         </Button>
                         <Button
                             onClick={() => setImageSource('url')}
                             variant={imageSource === 'url' ? "default" : "secondary"}
+                            className="flex-1 sm:flex-none min-w-[120px]"
                         >
                             Image URL
                         </Button>
                         <Button
                             onClick={() => setImageSource('camera')}
                             variant={imageSource === 'camera' ? "default" : "secondary"}
+                            className="flex-1 sm:flex-none min-w-[120px]"
                         >
                             Use Camera
                         </Button>
                     </div>
 
                     <select
-                        className="w-full p-2 bg-gray-700 rounded-md"
+                        className="w-full p-3 bg-gray-700 rounded-md border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
                         value={selectedFruitType}
                         onChange={(e) => setSelectedFruitType(e.target.value as FruitType)}
                     >
@@ -87,27 +90,29 @@ export function UploadDialog({
                     </select>
 
                     {imageSource === 'upload' && (
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={onImageUpload}
-                            className="w-full"
-                        />
+                        <div className="relative">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={onImageUpload}
+                                className="w-full p-2 bg-gray-700 rounded-md border border-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-500 file:text-white hover:file:bg-blue-600 transition-colors"
+                            />
+                        </div>
                     )}
 
                     {imageSource === 'url' && (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <input
                                 type="url"
                                 value={imageUrlInput}
                                 onChange={(e) => setImageUrlInput(e.target.value)}
                                 placeholder="Enter image URL"
-                                className="w-full p-2 bg-gray-700 rounded-md"
+                                className="w-full p-3 bg-gray-700 rounded-md border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
                             />
                             <Button
                                 onClick={() => onUrlSubmit(imageUrlInput)}
                                 disabled={!imageUrlInput}
-                                className="w-full"
+                                className="w-full bg-blue-500 hover:bg-blue-600 transition-colors"
                             >
                                 Load Image
                             </Button>
@@ -117,18 +122,18 @@ export function UploadDialog({
                     {imageSource === 'camera' && (
                         <Button
                             onClick={onCameraCapture}
-                            className="w-full"
+                            className="w-full bg-blue-500 hover:bg-blue-600 transition-colors"
                         >
                             Capture from Raspberry Pi Camera
                         </Button>
                     )}
 
                     {imageUrl && (
-                        <div className="relative w-full h-48">
+                        <div className="relative w-full h-64 sm:h-80 rounded-lg overflow-hidden border-2 border-gray-600">
                             <img
                                 src={imageUrl}
                                 alt="Selected fruit"
-                                className="w-full h-full object-contain rounded-lg"
+                                className="w-full h-full object-contain rounded-lg bg-gray-900/50"
                             />
                         </div>
                     )}
@@ -136,7 +141,10 @@ export function UploadDialog({
                     <Button
                         onClick={handleAnalyzeClick}
                         disabled={!selectedImage || !selectedFruitType}
-                        className="w-full"
+                        className={`w-full text-lg py-6 ${!selectedImage || !selectedFruitType
+                                ? 'bg-gray-600 cursor-not-allowed'
+                                : 'bg-green-500 hover:bg-green-600'
+                            } transition-colors`}
                     >
                         Start Analysis
                     </Button>

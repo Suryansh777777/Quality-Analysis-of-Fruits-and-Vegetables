@@ -25,20 +25,22 @@ export const HeroSection = () => (
                 assessment with unprecedented accuracy
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-                <Button
-                    size="lg"
-                    className="bg-white text-gray-900 hover:bg-gray-100 w-full sm:w-auto"
-                >
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button
+                <a href="/dashboard">
+                    <Button
+                        size="lg"
+                        className="bg-white text-gray-900 hover:bg-gray-100 w-full sm:w-auto"
+                    >
+                        Get Started
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                </a>
+                {/* <Button
                     size="lg"
                     variant="outline"
                     className="border-gray-700 hover:bg-gray-800 w-full sm:w-auto"
                 >
                     View Demo
-                </Button>
+                </Button> */}
             </div>
         </motion.div>
     </header>

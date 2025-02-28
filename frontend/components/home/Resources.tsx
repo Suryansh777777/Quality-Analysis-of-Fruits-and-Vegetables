@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import {
     ArrowRight, ChevronRight,
@@ -41,7 +40,8 @@ export const Resources = () => {
                     <ul className="space-y-2">
                         <li>
                             <a
-                                href="#"
+                                href="/assets/Quality Analysis of Fruits and Vegetables report.pdf"
+                                download="Project_Report.pdf"
                                 className="text-blue-400 hover:underline flex items-center gap-2"
                             >
                                 <ChevronRight className="h-4 w-4" />
@@ -57,7 +57,7 @@ export const Resources = () => {
                                 User Manual
                             </a>
                         </li>
-                        <li>
+                        {/* <li>
                             <a
                                 href="#"
                                 className="text-blue-400 hover:underline flex items-center gap-2"
@@ -65,7 +65,7 @@ export const Resources = () => {
                                 <ChevronRight className="h-4 w-4" />
                                 API Documentation
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </CardContent>
             </Card>
@@ -80,10 +80,12 @@ export const Resources = () => {
                     <p className="mb-4">
                         Explore our project's source code on GitHub:
                     </p>
-                    <Button className="w-full text-black" variant="outline">
-                        View on GitHub
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <a href="https://github.com/Suryansh777777/Quality-Analysis-of-Fruits-and-Vegetables">
+                        <Button className="w-full text-black" variant="outline">
+                            View on GitHub
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </a>
                 </CardContent>
             </Card>
         </div>

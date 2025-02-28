@@ -13,7 +13,7 @@ export interface FruitData {
   prediction: FruitLabel;
   fruitType: FruitType;
   freshness: Freshness;
-  ripeness: Ripeness | null;
+  ripeness: Ripeness ;
   shelfLifeDays: number;
   confidence: number;
   batchId?: string;

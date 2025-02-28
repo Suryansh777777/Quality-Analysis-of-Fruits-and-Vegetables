@@ -25,6 +25,9 @@ export function useFruitAnalysis(selectedFruit: FruitType) {
   const [batchHistory, setBatchHistory] = useState<BatchData[]>(mockBatchHistory);
   const [error, setError] = useState<string | null>(null);
 
+  // Replace this constant with your Raspberry Pi's IP
+  const RASPBERRY_PI_URL = "http://192.168.0.107:5000";  // Use your Pi's actual IP
+
   // Fetch initial data from database
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -95,11 +98,13 @@ export function useFruitAnalysis(selectedFruit: FruitType) {
   const handleCameraCapture = async () => {
     try {
       setError(null);
-      const response = await fetch("http://localhost:8000/api/capture-image");
+      const response = await fetch("http://192.168.0.107:5000/api/capture-image");
+      console.log({response});  
+
       if (!response.ok) throw new Error("Failed to capture image");
 
       const blob = await response.blob();
-      const file = new File([blob], "camera-capture.jpg", { type: blob.type });
+      const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
       setSelectedImage(file);
       setImageUrl(URL.createObjectURL(file));
     } catch (error) {

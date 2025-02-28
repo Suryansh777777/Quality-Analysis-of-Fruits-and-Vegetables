@@ -41,12 +41,12 @@ export const Navbar = () => {
                 >
                   Dashboard
                 </a>
-                <a
+                {/* <a
                   href="#"
                   className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Analytics
-                </a>
+                </a> */}
                 <a
                   href="/predict"
                   className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -161,19 +161,19 @@ export const Navbar = () => {
             >
               Dashboard
             </a>
-            <a
+            {/* <a
               href="#"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
             >
               Analytics
-            </a>
+            </a> */}
             <a
               href="/predict"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
             >
               Predict
             </a>
-            <div className="relative mt-3 px-3">
+            {/* <div className="relative mt-3 px-3">
               <div className="absolute inset-y-0 left-3 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />
               </div>
@@ -182,7 +182,7 @@ export const Navbar = () => {
                 className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-md bg-gray-900 text-gray-300 placeholder-gray-400"
                 placeholder="Search batches..."
               />
-            </div>
+            </div> */}
           </div>
         </div>
       )}
